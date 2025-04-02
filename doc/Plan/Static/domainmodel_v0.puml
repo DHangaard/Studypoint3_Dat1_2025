@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+object StartMenu
+object HomeMenu
+object User
+object Admin
+object NormalUser
+object Media
+object Movies
+object Series
+object Child
+
+User <|-- NormalUser
+User <|-- Admin
+User <|-- Child
+User *-- HomeMenu
+
+HomeMenu *-- Media
+StartMenu *-- User
+
+Media <|-- Movies
+Media <|-- Series
+
+@enduml

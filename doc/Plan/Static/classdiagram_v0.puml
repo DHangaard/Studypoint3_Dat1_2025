@@ -1,0 +1,57 @@
+@startuml
+
+class Admin{
+}
+
+class Child{
+}
+
+class FileIO{
+}
+
+class HomeMenu{
+}
+
+class Main{
+}
+
+class Movies{
+}
+
+class NormalUser{
+}
+
+class Series{
+}
+
+class StartMenu{
+}
+
+class TextUI{
+}
+
+Abstract Media{
+}
+
+Abstract User{
+}
+
+
+
+Main *-- StartMenu
+StartMenu *-- User
+
+User <|-- Admin
+User <|-- NormalUser
+User <|-- Child
+
+User *-- HomeMenu
+HomeMenu *-- Media
+
+Media <|-- Movies
+Media <|-- Series
+
+
+
+
+@enduml
