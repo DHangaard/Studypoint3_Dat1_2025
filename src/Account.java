@@ -55,6 +55,8 @@ public class Account {
         return this.age;
     }
 
+    public String getPassword(){return this.password;}
+
     @Override
     public String toString(){
         String s = this.username + ", " + this.password + ", " + this.name + ", " + this.birthday;

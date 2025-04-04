@@ -95,10 +95,11 @@ class AccountManager {
 - FileIO io
 - ArrayList<Account>
 + AccountManager(String path)
-+ boolean createAccount()
++ void createAccount()
 + void loadUserData()
 + void saveUserData()
-+ boolean isUserInSystem(String username, String password)
++ boolean isUserInSystem(String username)
++ boolean isUserNameAndPasswordCorrect()
 + boolean isUserAdmin(User u)
 }
 

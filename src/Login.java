@@ -19,10 +19,7 @@ public class Login {
     public void start() {
 
         ui.displayMessage("Welcome to " + this.appName + "\n" + "Du har følgende valgmuligheder:");
-        login();
-    }
 
-    public void login() {
         boolean isChoosing = true;
 
         while (isChoosing) {
@@ -33,11 +30,26 @@ public class Login {
                 isChoosing = false;
 
             } else if (choice == 2) {
-                //manager.login();
+                login();
                 isChoosing = false;
 
             } else {
                 ui.displayMessage("Vælg venligst en gyldig mulighed");
+            }
+        }
+
+    }
+
+    public void login() {
+        while(true) {
+            String userName = ui.promptText("Indtast dit brugernavn");
+            String password = ui.promptText("Indtast password");
+            if (manager.isUserNameAndPasswordCorrect(userName, password)) {
+                //service.start()
+                break;
+            } else {
+                ui.displayMessage("Brugernavn eller password forkert" + "\n" + "Prøv igen");
+                System.out.println("");
             }
         }
     }
@@ -45,19 +57,20 @@ public class Login {
 
     public void createAccount() {
         String username = "";
-                while(true) {
-                    username = ui.promptText("Indstast et ønsket brugernavn");
+        boolean isUserNameTaken = true;
+
+                while(isUserNameTaken) {
+                    username = ui.promptText("Indtast et ønsket brugernavn");
                     if (manager.isUserInSystem(username)) {
                         ui.displayMessage("Sorry username already taken");
-
                     }
-                    break;
+                    else {
+                        isUserNameTaken = false;
+                    }
                 }
-
                 String password = ui.promptText("Venligst set et password");
                 String name = ui.promptText("Indtast dit fornavn");
                 LocalDate birthdate = ui.promptBirthday("Indtast fødselsoplysninger");
                 manager.createAccount(username,password,name,birthdate);
-
     }
 }

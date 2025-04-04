@@ -67,8 +67,14 @@ public class AccountManager {
         accounts.forEach( (k,v) -> userData.add(v.toString()));
 
         io.saveData(userData, path, "username, password, name, birthday");
+    }
 
-
+    public boolean isUserNameAndPasswordCorrect(String userName, String password){
+        if (this.accounts.containsKey(userName)) {
+            Account acc = this.accounts.get(userName);
+            return acc.getPassword().equals(password);
+        }
+        return false;
     }
 
     boolean isUserInSystem(String username) {
