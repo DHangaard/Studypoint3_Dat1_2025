@@ -1,9 +1,9 @@
 import java.util.List;
 
 public abstract class Media {
-    private String title;
-    private List<String> genre;
-    private double rating;
+    protected String title;
+    protected List<String> genre;
+    protected double rating;
 
     public Media(String title, List<String> genre, double rating) {
         this.title = title;

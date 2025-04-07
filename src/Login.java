@@ -52,7 +52,7 @@ public class Login {
             String userName = ui.promptText("Indtast dit brugernavn");
             String password = ui.promptText("Indtast password");
             if (manager.isUserNameAndPasswordCorrect(userName, password)) {
-                //service.start();
+                streamingService.showMenu();
                 isPasswordCorrect = true;
             } else {
                 ui.displayMessage("Brugernavn eller password forkert" + "\n" + "Prøv igen");
