@@ -59,7 +59,6 @@ public class AccountManager {
             createAccount(username,password,name,birthday);
 
         }
-
     }
 
     public void saveUserData() {

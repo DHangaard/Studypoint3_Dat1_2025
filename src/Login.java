@@ -27,11 +27,14 @@ public class Login {
 
             if (choice == 1) {
                 createAccount();
+                start();
                 isChoosing = false;
 
             } else if (choice == 2) {
                 login();
                 isChoosing = false;
+
+                // else if (choice == 3) { closeApp(); }
 
             } else {
                 ui.displayMessage("Vælg venligst en gyldig mulighed");
@@ -41,12 +44,14 @@ public class Login {
     }
 
     public void login() {
-        while(true) {
+        boolean isPasswordCorrect = false;
+
+        while(!isPasswordCorrect) {
             String userName = ui.promptText("Indtast dit brugernavn");
             String password = ui.promptText("Indtast password");
             if (manager.isUserNameAndPasswordCorrect(userName, password)) {
-                //service.start()
-                break;
+                //service.start();
+                isPasswordCorrect = true;
             } else {
                 ui.displayMessage("Brugernavn eller password forkert" + "\n" + "Prøv igen");
                 System.out.println("");
@@ -62,13 +67,13 @@ public class Login {
                 while(isUserNameTaken) {
                     username = ui.promptText("Indtast et ønsket brugernavn");
                     if (manager.isUserInSystem(username)) {
-                        ui.displayMessage("Sorry username already taken");
+                        ui.displayMessage("Brugernavn er optaget");
                     }
                     else {
                         isUserNameTaken = false;
                     }
                 }
-                String password = ui.promptText("Venligst set et password");
+                String password = ui.promptText("Lav et password");
                 String name = ui.promptText("Indtast dit fornavn");
                 LocalDate birthdate = ui.promptBirthday("Indtast fødselsoplysninger");
                 manager.createAccount(username,password,name,birthdate);
