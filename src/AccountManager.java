@@ -22,8 +22,7 @@ public class AccountManager {
         if(!isUserInSystem(username)) {
             Account acc = new Account(username, password, name, birthdate);
             this.accounts.put(username, acc);
-            saveUserData();
-
+            appendUserData(acc);
         } else {
             ui.displayMessage("Error: Username already taken"); // Translate String to dansih
         }
@@ -40,11 +39,13 @@ public class AccountManager {
             LocalDate birthday = LocalDate.parse(values[3].trim());
             //Boolean child = parseBoolean(values[4]);
 
-            createAccount(username,password,name,birthday);
+            // This might be causing issues:
+            // createAccount(username,password,name,birthday);
 
         }
     }
 
+    /*
     // Save for single user only!
     public void saveUserData() {
         ArrayList<String> userData = new ArrayList<>();
@@ -52,6 +53,12 @@ public class AccountManager {
 
         io.saveData(userData, path, "username, password, name, birthday");
     }
+    */
+
+    public void appendUserData(Account account) {
+        io.appendData(account.toString(), path);
+    }
+
 
     public boolean isUserNameAndPasswordCorrect(String userName, String password){
         if (this.accounts.containsKey(userName)) {

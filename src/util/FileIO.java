@@ -24,6 +24,16 @@ public class FileIO {
         }
     }
 
+    public void appendData(String object, String path){
+        try {
+            FileWriter writer = new FileWriter(path, true); // overloaded FileWriter, true activates append mode
+                writer.write(object + "\n");
+            writer.close();
+        }catch (IOException e) {
+            System.out.println("problem: "+ e.getMessage());
+        }
+    }
+
     public ArrayList<String> readData(String path) {
         ArrayList<String> data = new ArrayList<>();
         File file = new File(path);
