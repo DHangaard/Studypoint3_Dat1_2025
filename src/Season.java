@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Season {
     private int episodes;
     private int season;
@@ -9,12 +7,15 @@ public class Season {
         this.episodes = episodes;
     }
 
-    public int getSeason(){
+    public int getSeasonNumber(){
         return season;
     }
 
-    public int getEpisodes(){
+    public int getNumberOfEpisodes(){
         return episodes;
     }
 
+    public int getEpisodeCount() {
+        return this.episodes;
+    }
 }

@@ -69,4 +69,9 @@ public class AccountManager {
     return false;
     }
 
+    public Account getAccount(String username){
+        //Returns the "value" Account from hashmap with the key username
+        return this.accounts.get(username);
+    }
+
 }

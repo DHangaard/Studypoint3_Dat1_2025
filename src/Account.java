@@ -1,4 +1,6 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
+
 import static java.time.LocalDate.now;
 
 
@@ -11,6 +13,8 @@ public class Account {
     private LocalDate birthday;
     private int age;
     private boolean isChild;
+    private ArrayList<Media> seenMedia;
+    private ArrayList<Media> savedMedia;
 
     // Constructor
     public Account(String username, String password, String name, LocalDate birthdate){
@@ -19,7 +23,10 @@ public class Account {
         this.name = name;
         this.birthday = birthdate;
         this.isChild = true;
+        this.seenMedia = new ArrayList<>();
+        this.savedMedia = new ArrayList<>();
         isAgeLessThan10(birthdate);
+
     }
 
     // Methods
@@ -47,10 +54,8 @@ public class Account {
         }
 
     }
-    public String getName(){
-        return this.name;
+    public String getName(){return this.name;}
 
-    }
     public int getAge(){
         return this.age;
     }
@@ -61,6 +66,22 @@ public class Account {
     public String toString(){
         String s = this.username + ", " + this.password + ", " + this.name + ", " + this.birthday;
         return s;
+    }
+
+    public void addSeenMedia(Media media){
+        this.seenMedia.add(media);
+    }
+
+    public void addSavedMedia(Media media){
+        this.savedMedia.add(media);
+    }
+
+    public ArrayList<Media> getSeenMedia(){
+        return this.seenMedia;
+    }
+
+    public ArrayList<Media> getSavedMedia(){
+        return this.savedMedia;
     }
 
 

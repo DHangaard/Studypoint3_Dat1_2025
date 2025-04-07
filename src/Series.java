@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Series extends Media {
@@ -8,16 +7,15 @@ public class Series extends Media {
     private ArrayList<Season> seasons;
 
 
-    public Series(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeasons){
+    public Series(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating){
         super(title, genre, rating);
         this.releaseYear = releaseYear;
         this.endYear = endYear;
-
-        this.episodesAndSeasons = new ArrayList<>();
-        this.episodesAndSeasons = episodeAndSeasons;
-
         this.seasons = new ArrayList<>();
-        generateSeasons();
+    }
+
+    public void addSeason(Season season){
+        this.seasons.add(season);
     }
 
     private void generateSeasons() {
@@ -37,6 +35,29 @@ public class Series extends Media {
 
     @Override
     public String toString() {
-        return this.title + " , " + this.releaseYear + "-" + this.endYear + " , " + this.genre + " , " + this.rating;
+        return this.title + " , " + this.releaseYear + "-" + this.endYear + " , " + this.genre + " , " + this.rating + ", Seasons: " + this.seasons.size();
+    }
+
+    public int getReleaseYear(){
+        return this.releaseYear;
+    }
+
+    public int getEndYear(){
+        return this.endYear;
+    }
+
+    @Override
+    public String getTitle() {
+        return this.title;
+    }
+
+    @Override
+    public ArrayList<String> getGenre() {
+        return this.genre;
+    }
+
+    @Override
+    public double getRating() {
+        return this.rating;
     }
 }

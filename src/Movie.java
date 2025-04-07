@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class Movie extends Media {
 
@@ -7,12 +6,9 @@ public class Movie extends Media {
     private int year;
 
     //Constructor
-    public Movie(String title, int year, List<String> genre, double rating) {
+    public Movie(String title, int year, ArrayList<String> genre, double rating) {
         super(title, genre, rating);
         this.year = year;
-
-
-
     }
 
     //Methods
@@ -28,14 +24,12 @@ public class Movie extends Media {
     public int getYear(){
         return this.year;
     }
-    public List<String> getGenre(){
-        return this.genre;
 
-    }
+    public ArrayList<String> getGenre(){return this.genre;}
+
     public double getRating(){
         return this.rating;
     }
-
 
 
     //@Override
