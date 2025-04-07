@@ -1,9 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import util.FileIO;
+import util.TextUI;
 
 public class MediaManager {
     FileIO io;
+    private TextUI ui;
     private ArrayList<Movie> movies;
     private ArrayList<Series> series;
     private String moviePath;
@@ -15,6 +19,7 @@ public class MediaManager {
         this.movies = new ArrayList<>();
         this.series = new ArrayList<>();
         this.io = new FileIO();
+        this.ui = new TextUI();
     }
 
     public void loadMovieData(){
@@ -60,8 +65,26 @@ public class MediaManager {
         }
     }
 
-    public void saveMediaData(){
+    public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeasons){
+        ArrayList<String> toSave = new ArrayList<>();
+        loadSeriesData();
+        ArrayList<Series> currentSave = getSeries();
+        currentSave.add(new Series(title, releaseYear, endYear, genre , rating, episodeAndSeasons));
+        for(Series s : currentSave){
+            toSave.add(currentSave.toString());
+        }
+        io.saveData(toSave, seriesPath, "title; yearspan; genres; rating; seasons/episodes");
+    }
 
+    public void saveMediaData(String title, int year, List<String> genre, double rating){
+        ArrayList<String> toSave = new ArrayList<>();
+        loadMovieData();
+        ArrayList<Movie> currentSave = getMovie();
+        currentSave.add(new Movie(title, year, genre, rating));
+        for(Movie m : currentSave){
+            toSave.add(currentSave.toString());
+        }
+        io.saveData(toSave, moviePath, "title; year; genres; rating");
     }
 
     public ArrayList<Series> getSeries(){
