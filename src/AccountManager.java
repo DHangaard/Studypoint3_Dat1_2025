@@ -17,22 +17,6 @@ public class AccountManager {
         loadUserData();
     }
 
-    /*
-    Public void createAccount(){
-        String tmpUsername = ui.promptText("Hvad er dit oenskede brugernavn?");
-        String tmpPassword = ui.promptText(Venligst set et password);
-        String tmpName = ui.promptText;
-        LocalDate tmpBirthdate = ui.promptBirthday;
-
-        if(!isUserInSystem(tmpUsername, tmpPassword)){
-            Account acc = new Account(tmpUsername, tmpPassword, tmpName, tmpBirthdate);
-            this.accounts.put(username, acc);
-            saveUserData(accounts);
-        } else {
-            ui.displayMessage("Error: Username already taken")
-        }
-    }
-    */
 
     public void createAccount(String username, String password, String name, LocalDate birthdate) {
         if(!isUserInSystem(username)) {
@@ -61,6 +45,7 @@ public class AccountManager {
         }
     }
 
+    // Save for single user only!
     public void saveUserData() {
         ArrayList<String> userData = new ArrayList<>();
         accounts.forEach( (k,v) -> userData.add(v.toString()));

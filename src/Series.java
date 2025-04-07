@@ -21,13 +21,13 @@ public class Series extends Media {
     }
 
     private void generateSeasons() {
+
         for(String s : this.episodesAndSeasons) {
             String[] values = s.split("-");
             int seasonNumber = Integer.parseInt(values[0]);
             int episodes = Integer.parseInt(values[1]);
             seasons.add(new Season(seasonNumber, episodes));
         }
-
     }
 
 
