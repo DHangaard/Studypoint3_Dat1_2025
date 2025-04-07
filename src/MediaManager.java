@@ -44,7 +44,12 @@ public class MediaManager {
             String years = values[1].trim();
             String[] yearArray = years.split("-");
             int releaseYear = Integer.parseInt(yearArray[0].trim());
-            int endYear = Integer.parseInt(yearArray[1].trim());
+
+            // Revise start
+            int endYear = (yearArray.length > 1 && !yearArray[1].trim().isEmpty())
+                    ? Integer.parseInt(yearArray[1].trim())
+                    : 2025; // TODO : Lav else statement til en flexibel dato
+            // Revise end
 
             ArrayList<String> genre = new ArrayList<>(Arrays.asList(values[2].split(",")));
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));

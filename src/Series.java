@@ -23,13 +23,20 @@ public class Series extends Media {
     private void generateSeasons() {
 
         for(String s : this.episodesAndSeasons) {
-            String[] values = s.split("-");
-            int seasonNumber = Integer.parseInt(values[0]);
-            int episodes = Integer.parseInt(values[1]);
-            seasons.add(new Season(seasonNumber, episodes));
+            String[] values = s.split(",");
+
+            for(int i = 0; i < values.length; i++) {
+                String[] parts = values[i].split("-");
+
+                int seasonNumber = Integer.parseInt(parts[0].trim());
+                int episodes = Integer.parseInt(parts[1].trim());
+                seasons.add(new Season(seasonNumber, episodes));
+            }
         }
     }
 
-
-
+    @Override
+    public String toString() {
+        return this.title + " , " + this.releaseYear + "-" + this.endYear + " , " + this.genre + " , " + this.rating;
+    }
 }

@@ -17,16 +17,16 @@ public class StreamingService {
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
         this.account = account;
         this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
-
+        this.manager.loadSeriesData();
         this.manager.loadMovieData();
     }
 
     // Methods
     public void showMenu(){
-        ArrayList<Movie> movies = manager.getMovie();
+        ArrayList<Series> series = manager.getSeries();
 
-        for(Movie m: movies){
-            System.out.println(m);
+        for(Series s: series){
+            System.out.println(s);
         }
 
         //ui.promptChoice(choices,1, "");
