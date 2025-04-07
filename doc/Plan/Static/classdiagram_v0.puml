@@ -68,10 +68,10 @@ class Login {
 }
 
 Abstract Media{
-- String title
-- List<String> genre
-- double rating
-+Media(String title, List<String> genre, double rating)
+# String title
+# List<String> genre
+# double rating
++ Media(String title, List<String> genre, double rating)
 }
 
 class Account{

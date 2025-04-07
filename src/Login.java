@@ -6,13 +6,15 @@ public class Login {
     // Attributes
     static TextUI ui;
     private AccountManager manager;
+    private StreamingService streamingService;
     private String appName;
 
     // Constructor
     public Login(String appName) {
-        this.appName = appName;
-        this.manager = new AccountManager();
         this.ui = new TextUI();
+        this.manager = new AccountManager();
+        this.appName = appName;
+        this.streamingService = new StreamingService(); // Ret senere til at tage account
     }
 
     // Methods

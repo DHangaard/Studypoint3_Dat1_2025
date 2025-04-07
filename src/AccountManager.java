@@ -41,7 +41,7 @@ public class AccountManager {
             saveUserData();
 
         } else {
-            ui.displayMessage("Error: Username already taken");
+            ui.displayMessage("Error: Username already taken"); // Translate String to dansih
         }
     }
 
