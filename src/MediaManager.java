@@ -1,10 +1,15 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import util.FileIO;
+import util.TextUI;
+import java.util.List;
 
 public class MediaManager {
     FileIO io;
+    private TextUI ui;
     private ArrayList<Media> mediaList;
+    private ArrayList<Movie> movies;
+    private ArrayList<Series> series;
     private String moviePath;
     private String seriesPath;
 
@@ -13,6 +18,7 @@ public class MediaManager {
         this.seriesPath = seriesPath;
         this.mediaList = new ArrayList<>();
         this.io = new FileIO();
+        this.ui = new TextUI();
     }
 
     public void loadMovieData(){
@@ -75,8 +81,26 @@ public class MediaManager {
         }
     }
 
-    public void saveMediaData(){
+    public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating){
+        ArrayList<String> toSave = new ArrayList<>();
+        loadSeriesData();
+        ArrayList<Series> currentSave = getSeries();
+        currentSave.add(new Series(title, releaseYear, endYear, genre, rating));
+        for(Series s : currentSave){
+            toSave.add(currentSave.toString());
+        }
+        io.saveData(toSave, seriesPath, "title; yearspan; genres; rating; seasons/episodes");
+    }
 
+    public void saveMediaData(String title, int year, ArrayList<String> genre, double rating){
+        ArrayList<String> toSave = new ArrayList<>();
+        loadMovieData();
+        ArrayList<Movie> currentSave = getMovie();
+        currentSave.add(new Movie(title, year, genre, rating));
+        for(Movie m : currentSave){
+            toSave.add(currentSave.toString());
+        }
+        io.saveData(toSave, moviePath, "title; year; genres; rating");
     }
 
     public ArrayList<Media> searchMediaByTitle(String title){
@@ -109,18 +133,18 @@ public class MediaManager {
         return result;
     }
 
-    public ArrayList<Media> searchMediaByYear(int yearFrom, int yearTo){
+    public ArrayList<Media> searchMediaByYear(int yearSearched){
         ArrayList<Media> result = new ArrayList<>();
         for(Media media: this.mediaList){
             if(media instanceof Movie){
                 Movie movie = (Movie) media;
-                if(movie.getYear() >= yearFrom && movie.getYear() <= yearTo){
+                if(movie.getYear() == yearSearched){
                     result.add(media);
                 }
             }
             if(media instanceof Series){
                 Series serie = (Series) media;
-                if(serie.getReleaseYear() >= yearFrom && serie.getReleaseYear() <= yearTo){
+                if(serie.getReleaseYear() == yearSearched){
                     result.add(media);
                 }
             }
@@ -128,8 +152,16 @@ public class MediaManager {
         return result;
     }
 
+
     public ArrayList<Media> getMediaList(){
         return mediaList;
+    }
+
+    public ArrayList<Series> getSeries(){
+        return this.series;
+    }
+    public ArrayList<Movie> getMovie(){
+        return this.movies;
     }
 
     public void addMedia(Media media){

@@ -69,6 +69,10 @@ public class AccountManager {
     public void appendUserData(Account account) {
         io.appendData(account.toString(), path);
     }
+
+    public Account getAccount(String userName) {
+        return this.accounts.get(userName);
+    }
 }
 
     /*

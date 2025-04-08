@@ -1,6 +1,5 @@
 import util.TextUI;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,7 @@ public class StreamingService {
     private MediaManager manager;
     private Account currentUser;
     private ArrayList<String> choices;
+    private boolean continueSearch;
 
     // Constructor
 
@@ -21,20 +21,31 @@ public class StreamingService {
         this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
         this.manager.loadSeriesData();
         this.manager.loadMovieData();
+        this.continueSearch = false;
     }
 
     // Methods
     public void showMenu(){
-       String choice = ui.promptText("Søg efter en film/eller serie");
-       ArrayList<Media> searchTitles = manager.searchMediaByTitle(choice);
-       ui.displayMessage("Film som matcher titlen:");
-       for(Media m: searchTitles){
-           System.out.println(m);
-       }
+        ui.displayMessage("Velkommen tilbage " + this.currentUser.getName());
+
+        int choice = ui.promptInteger("1. Search"+"\n"+"2. Show seen media"+"\n"+"3. Show saved media"+"\n"+ "4. Logout"+"\n"+ "5. Exit to main menu");
+
+                //Switch case med valget
+        switch (choice){
+            case 1: search();
+            break;
+            case 2: showSeenMedia();
+            break;
+            case 3: showSavedMedia();
+            break;
+            case 4: logOut();
+            break;
+            //case 5:
+            default: ui.displayMessage("Ugyldigt valgt vælg et tal mellem 1-5");
+
+        }
 
     }
-
-
 
     public void showSeenMedia(){
         ArrayList<String> mediaAsStrings = new ArrayList<>();
@@ -88,6 +99,50 @@ public class StreamingService {
     }
 
 
+    public void saveMovie() {
+        //TODO : IF USER IS ADMIN!
+        ArrayList<String> genre = new ArrayList<>();
+        String title = ui.promptText("Skriv en titel");
+        int year = ui.promptInteger("Skriv årstal filmen er fra");
+
+        boolean addingGenres = true;
+        while (addingGenres) {
+            genre.add(ui.promptText("Angiv genre"));
+            addingGenres = ui.promptBinary("Vil du tilføje en genre mere? (Y/N)");
+        }
+
+        double rating = ui.promptDouble("Giv et bedømmelsestal af filmen");
+
+        manager.saveMediaData(title, year, genre, rating);
+    }
+
+    public void saveSeries() {
+        //TODO : IF USER IS ADMIN ONLY!
+        ArrayList<String> genre = new ArrayList<>();
+        ArrayList<String> episodeAndSeasons = new ArrayList<>();
+
+
+        String title = ui.promptText("Skriv en titel");
+        int releaseYear = ui.promptInteger("Skriv årstal serien er fra");
+        int endYear = ui.promptInteger("Skriv årstal serien kører til (eller tryk enter");
+
+        //while for at få liste af genrer og sæsoner/episoder
+        boolean addingGenres = true;
+        while (addingGenres) {
+            genre.add(ui.promptText("Angiv genre"));
+            addingGenres = ui.promptBinary("Vil du tilføje en genre mere? (Y/N)");
+        }
+
+        double rating = ui.promptDouble("Giv et bedømmelsestal af serien");
+
+        boolean addingSeasons = true;
+        while (addingSeasons) {
+            episodeAndSeasons.add(ui.promptText("Angiv sæson og episoder i sæsonen i format 'sæsonnummer-episoder'"));
+            addingSeasons = ui.promptBinary("Vil du tilføje en sæson mere? (Y/N)");
+        }
+        manager.saveMediaData(title, releaseYear, endYear, genre, rating);
+
+    }
     public void logOut(){
 
     }
@@ -102,31 +157,100 @@ public class StreamingService {
 
     }
 
-
-    // Search
     public void search(){
+        ui.displayMessage("Søg efter film eller serier:");
+        int choice = 0;
+        while(true) {
+            choice = ui.promptInteger("1) Søg efter titel" + "\n" + "2) Søg efter årstal" + "\n" + "3) Søg efter genre" + "\n" + "4) Søg efter rating");
+            if(choice == 1){
+                String title = ui.promptText("Hvilen title vil du søge efter?");
+              searchTitle(title);
+              break;
+            } else if(choice == 2){
+                int year = ui.promptInteger("Hvilet årstal vil du søge efter?");
+                searchByYear(year);
+                break;
+            }else if (choice == 3){
+                String genre = ui.promptText("Hvilen genre vil du søge efter?");
+                searchCategory(genre);
+                break;
+            }else if (choice == 4){
+                double rating = ui.promptDouble("hvilken rating vil du søge efter?");
+                break;
+            } else{
+                ui.displayMessage("Vælg venligst et tal mellem 1-5");
 
+
+            }
+
+        }
     }
-
 
     private void searchTitle(String title){
+        ArrayList<Media> searchTitles = manager.searchMediaByTitle(title);
+        if(!(searchTitles == null)) {
+            ui.displayMessage("Film/Serie som matcher titlen:");
+            for(int i = 0; i < searchTitles.size(); i++){
+                System.out.println(i + 1 + ") " + searchTitles.get(i));
+            }
+            boolean wannaSee = ui.promptBinary("Vil du se en af disse titler? y/n ");
+
+
+            if(wannaSee){}
+
+            int mediaChoice = ui.promptInteger("Vælg venligst en af medierne ");
+            int choice = ui.promptInteger("1) Vil du afspille mediet?" + "\n" + "2) Gemme en film/ serie i Se senere" + "\n" +"3) Gå tilbage til hovedmenu");
+                    if(choice ==1){
+                        currentUser.addSeenMedia(searchTitles.get(choice-1));
+                    }
+        }
+        else {
+            searchNotFound();
+        }
 
     }
 
 
-    private void searchCategory(){
+    private void searchCategory(String genre) {
+        ArrayList<Media> yearList = manager.searchMediaByGenre(genre);
+        if (!(yearList == null)) {
+            ui.displayMessage("Film/ serie som matcher genren:");
+            for (Media m : yearList) {
+                System.out.println("1)" + m);
+            }
+        } else {
+            searchNotFound();
+
+        }
 
     }
+        private void searchByYear ( int searchedYear){
+
+            ArrayList<Media> yearList = manager.searchMediaByYear(searchedYear);
+            if (!(yearList == null)) {
+                ui.displayMessage("Film/ serie som matcher titlen:");
+                for (Media m : yearList) {
+                    System.out.println("1)" + m);
+                }
+            } else {
+                searchNotFound();
+            }
+
+        }
 
 
-    private void searchByYear(){
+        private void searchByRating() {
 
-    }
+        }
+        private void searchNotFound() {
+            ui.displayMessage("Ingen film / serie fundet med det søgekriterie");
+            continueSearch = ui.promptBinary("Vil du søge igen?");
+            if (continueSearch) {
+                search();
+            }
+            showMenu();
 
-
-    private void searchByRating(){
-
-    }
+        }
 
 
 

@@ -25,10 +25,11 @@ public class Admin extends Account{
 
     protected void addMedia(Movie movie){
 
+
     }
 
 
-    protected void removeMedia(String title){
+    public void removeMedia(String title) {
 
     }
 
