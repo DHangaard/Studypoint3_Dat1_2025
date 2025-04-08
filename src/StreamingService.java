@@ -97,6 +97,7 @@ public class StreamingService {
 
     }
 
+    // Delete this
 
     private void displayMedia(){
 
