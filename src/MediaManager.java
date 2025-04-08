@@ -4,16 +4,14 @@ import util.FileIO;
 
 public class MediaManager {
     FileIO io;
-    private ArrayList<Movie> movies;
-    private ArrayList<Series> series;
+    private ArrayList<Media> mediaList;
     private String moviePath;
     private String seriesPath;
 
     public MediaManager(String moviePath, String seriesPath){
         this.moviePath = moviePath;
         this.seriesPath = seriesPath;
-        this.movies = new ArrayList<>();
-        this.series = new ArrayList<>();
+        this.mediaList = new ArrayList<>();
         this.io = new FileIO();
     }
 
@@ -30,33 +28,50 @@ public class MediaManager {
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));
 
             Movie movie = new Movie(title,year,genre,rating);
-            movies.add(movie);
+            this.mediaList.add(movie);
         }
     }
 
     public void loadSeriesData(){
-        //Get file data from file
+        // Hent filens data
         ArrayList<String> seriesData = io.readData(this.seriesPath);
 
-        for(String s: seriesData){
+        for (String s : seriesData) {
+
             String[] values = s.split(";");
             String title = values[0].trim();
+
+            // Håndter år
             String years = values[1].trim();
             String[] yearArray = years.split("-");
             int releaseYear = Integer.parseInt(yearArray[0].trim());
-
-            // Revise start
             int endYear = (yearArray.length > 1 && !yearArray[1].trim().isEmpty())
                     ? Integer.parseInt(yearArray[1].trim())
-                    : 2025; // TODO : Lav else statement til en flexibel dato
-            // Revise end
+                    : 2025; // Default hvis ingen slutdato
 
+            // Genre og rating
             ArrayList<String> genre = new ArrayList<>(Arrays.asList(values[2].split(",")));
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));
-            ArrayList<String> episodesAndSeasons = new ArrayList<>();
-            episodesAndSeasons.add(values[4]);
-            Series serie = new Series(title,releaseYear, endYear,genre,rating,episodesAndSeasons);
-            series.add(serie);
+
+            // Hent sæson- og episode
+            ArrayList<Season> seasons = new ArrayList<>();
+            for (int i = 4; i < values.length; i++) {
+                // Del dataet op i hver sæson-episode par
+                String[] seasonData = values[i].trim().split(",");
+                for (String seasonInfo : seasonData) {
+                    String[] seasonParts = seasonInfo.trim().split("-");
+                    int seasonNumber = Integer.parseInt(seasonParts[0].replaceAll("[^0-9]", ""));
+                    int episodeCount = Integer.parseInt(seasonParts[1].replaceAll("[^0-9]", ""));
+
+                    // Opret Season objekt og tilføj til listen
+                    seasons.add(new Season(seasonNumber, episodeCount));
+                }
+            }
+            Series serie = new Series(title, releaseYear, endYear, genre, rating);
+            for (Season season : seasons) {
+                serie.addSeason(season);
+            }
+            this.mediaList.add(serie);
         }
     }
 
@@ -64,12 +79,61 @@ public class MediaManager {
 
     }
 
-    public ArrayList<Series> getSeries(){
-        return this.series;
-    }
-    public ArrayList<Movie> getMovie(){
-        return this.movies;
+    public ArrayList<Media> searchMediaByTitle(String title){
+        ArrayList<Media> result = new ArrayList<>();
+        for(Media m: this.mediaList){
+            if(m.getTitle().toLowerCase().contains(title.toLowerCase())){
+                result.add(m);
+            }
+        }
+        return result;
     }
 
+    public ArrayList<Media> searchMediaByRating(int minimumRating){
+        ArrayList<Media> result = new ArrayList<>();
+        for(Media m: this.mediaList){
+            if(m.getRating()>=minimumRating){
+                result.add(m);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Media> searchMediaByGenre(String genre){
+        ArrayList<Media> result = new ArrayList<>();
+        for(Media m: this.mediaList){
+            if(m.getGenre().contains(genre)){
+                result.add(m);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Media> searchMediaByYear(int yearFrom, int yearTo){
+        ArrayList<Media> result = new ArrayList<>();
+        for(Media media: this.mediaList){
+            if(media instanceof Movie){
+                Movie movie = (Movie) media;
+                if(movie.getYear() >= yearFrom && movie.getYear() <= yearTo){
+                    result.add(media);
+                }
+            }
+            if(media instanceof Series){
+                Series serie = (Series) media;
+                if(serie.getReleaseYear() >= yearFrom && serie.getReleaseYear() <= yearTo){
+                    result.add(media);
+                }
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Media> getMediaList(){
+        return mediaList;
+    }
+
+    public void addMedia(Media media){
+        this.mediaList.add(media);
+    }
 
 }

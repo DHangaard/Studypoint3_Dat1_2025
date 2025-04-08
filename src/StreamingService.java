@@ -1,5 +1,6 @@
 import util.TextUI;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +9,15 @@ public class StreamingService {
     // Attributes
     TextUI ui;
     private MediaManager manager;
-    private Account account;
+    private Account currentUser;
     private ArrayList<String> choices;
+
     // Constructor
 
-    public StreamingService(){
+    public StreamingService(Account user){
         this.ui = new TextUI();
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
-        this.account = account;
+        this.currentUser = user;
         this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
         this.manager.loadSeriesData();
         this.manager.loadMovieData();
@@ -23,25 +25,66 @@ public class StreamingService {
 
     // Methods
     public void showMenu(){
-        ArrayList<Series> series = manager.getSeries();
+       String choice = ui.promptText("Søg efter en film/eller serie");
+       ArrayList<Media> searchTitles = manager.searchMediaByTitle(choice);
+       ui.displayMessage("Film som matcher titlen:");
+       for(Media m: searchTitles){
+           System.out.println(m);
+       }
 
-        for(Series s: series){
-            System.out.println(s);
+    }
+
+
+
+    public void showSeenMedia(){
+        ArrayList<String> mediaAsStrings = new ArrayList<>();
+        for(int i = 0; i < currentUser.getSeenMedia().size(); i++){
+            Media m = currentUser.getSeenMedia().get(i);
+            mediaAsStrings.add((i + 1) + ". " + m);
         }
-
-        //ui.promptChoice(choices,1, "");
-
+        ui.displayList(mediaAsStrings,"Sete film/serie");
     }
 
 
-
-    public void showSeenMedia(Account account){
-
+    public void showSavedMedia(){
+        ArrayList<String> mediaAsStrings = new ArrayList<>();
+        for(int i = 0; i < currentUser.getSavedMedia().size(); i++){
+            Media m = currentUser.getSavedMedia().get(i);
+            mediaAsStrings.add((i + 1) + ". " + m);
+        }
+        ui.displayList(mediaAsStrings,"Gemte film/serie");
     }
 
+    public void chooseSeenMedia(){
+        showSeenMedia();
+        while(true) {
+            int choice = ui.promptInteger("Vælg en film/serie vha. nummer");
 
-    public void showSavedMedia(Account account){
+            //Get the chosen movie/serie
+            if (choice > 0 && choice <= currentUser.getSeenMedia().size()) {
+                Media chosenMedia = currentUser.getSeenMedia().get(choice - 1);
+                ui.displayMessage("Du har valgt " + chosenMedia);
+                break;
+            } else {
+                ui.displayMessage("Ugyldig valg. Prøv igen");
+            }
+        }
+    }
 
+    public void chooseSavedMedia(){
+        showSavedMedia();
+        while(true) {
+            int choice = ui.promptInteger("Vælg en film/serie vha. nummer");
+
+            //Get the chosen movie/serie
+            if (choice > 0 && choice <= currentUser.getSavedMedia().size()) {
+                Media chosenMedia = currentUser.getSavedMedia().get(choice - 1);
+                ui.displayMessage("Du har valgt " + chosenMedia);
+                break;
+            } else {
+                ui.displayMessage("Ugyldig valg. Prøv igen");
+            }
+        }
     }
 
 

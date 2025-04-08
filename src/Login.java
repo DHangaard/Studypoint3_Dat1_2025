@@ -14,7 +14,7 @@ public class Login {
         this.ui = new TextUI();
         this.manager = new AccountManager();
         this.appName = appName;
-        this.streamingService = new StreamingService(); // Ret senere til at tage account
+
     }
 
     // Methods
@@ -52,6 +52,8 @@ public class Login {
             String userName = ui.promptText("Indtast dit brugernavn");
             String password = ui.promptText("Indtast password");
             if (manager.isUserNameAndPasswordCorrect(userName, password)) {
+                Account user = manager.getAccount(userName);
+                streamingService = new StreamingService(user);
                 streamingService.showMenu();
                 isPasswordCorrect = true;
             } else {
