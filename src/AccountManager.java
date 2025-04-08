@@ -43,9 +43,6 @@ public class AccountManager {
             Account acc = new Account(username, password, name, birthdate);
             this.accounts.put(username, acc);
 
-            // This might be causing issues:
-            // createAccount(username,password,name,birthday);
-
         }
     }
 
