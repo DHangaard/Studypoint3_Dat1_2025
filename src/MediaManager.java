@@ -17,6 +17,8 @@ public class MediaManager {
         this.moviePath = moviePath;
         this.seriesPath = seriesPath;
         this.mediaList = new ArrayList<>();
+        this.movies = new ArrayList<>();
+        this.series = new ArrayList<>();
         this.io = new FileIO();
         this.ui = new TextUI();
     }
@@ -30,7 +32,13 @@ public class MediaManager {
             String[] values = s.split(";");
             String title = values[0].trim();
             int year = Integer.parseInt(values[1].trim());
-            ArrayList<String> genre = new ArrayList<>(Arrays.asList(values[2].split(",")));
+
+            //Fjerner mellemrum i genre
+            ArrayList<String> genre = new ArrayList<>();
+            for (String g : values[2].split(",")) {
+                genre.add(g.trim());
+            }
+
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));
 
             Movie movie = new Movie(title,year,genre,rating);
@@ -55,8 +63,12 @@ public class MediaManager {
                     ? Integer.parseInt(yearArray[1].trim())
                     : 2025; // Default hvis ingen slutdato
 
-            // Genre og rating
-            ArrayList<String> genre = new ArrayList<>(Arrays.asList(values[2].split(",")));
+            //Fjerner mellemrum i genre
+            ArrayList<String> genre = new ArrayList<>();
+            for (String g : values[2].split(",")) {
+                genre.add(g.trim());
+            }
+            //Rating
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));
 
             // Hent sæson- og episode
@@ -126,8 +138,10 @@ public class MediaManager {
     public ArrayList<Media> searchMediaByGenre(String genre){
         ArrayList<Media> result = new ArrayList<>();
         for(Media m: this.mediaList){
-            if(m.getGenre().contains(genre)){
-                result.add(m);
+            for(String g: m.getGenre()) {
+                if (g.equalsIgnoreCase(genre.trim())) {
+                    result.add(m);
+                }
             }
         }
         return result;

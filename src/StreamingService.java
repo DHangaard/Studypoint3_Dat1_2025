@@ -163,7 +163,7 @@ public class StreamingService {
         while(true) {
             choice = ui.promptInteger("1) Søg efter titel" + "\n" + "2) Søg efter årstal" + "\n" + "3) Søg efter genre" + "\n" + "4) Søg efter rating");
             if(choice == 1){
-                String title = ui.promptText("Hvilen title vil du søge efter?");
+                String title = ui.promptText("Hvilken titel vil du søge efter?");
               searchTitle(title);
               break;
             } else if(choice == 2){
@@ -188,35 +188,33 @@ public class StreamingService {
 
     private void searchTitle(String title){
         ArrayList<Media> searchTitles = manager.searchMediaByTitle(title);
-        if(!(searchTitles == null)) {
-            ui.displayMessage("Film/Serie som matcher titlen:");
-            for(int i = 0; i < searchTitles.size(); i++){
+
+        if(!(searchTitles.isEmpty())) {
+            ui.displayMessage("Film og serier som matcher titlen:");
+            for (int i = 0; i < searchTitles.size(); i++) {
                 System.out.println(i + 1 + ") " + searchTitles.get(i));
             }
-            boolean wannaSee = ui.promptBinary("Vil du se en af disse titler? y/n ");
 
+            boolean confirmSelection = ui.promptBinary("Vil du se en af disse titler? Y/N ");
 
-            if(wannaSee){}
+            if (confirmSelection) {
+                int mediaChoice = ui.promptInteger("Vælg venligst en af medierne ");
+                Media chosen = searchTitles.get(mediaChoice - 1);
+                int action = ui.promptInteger("1) Vil du afspille mediet?" + "\n" + "2) Gemme en film/ serie i Se senere" + "\n" + "3) Gå tilbage til hovedmenu");
 
-            int mediaChoice = ui.promptInteger("Vælg venligst en af medierne ");
-            int choice = ui.promptInteger("1) Vil du afspille mediet?" + "\n" + "2) Gemme en film/ serie i Se senere" + "\n" +"3) Gå tilbage til hovedmenu");
-                    if(choice ==1){
-                        currentUser.addSeenMedia(searchTitles.get(choice-1));
-                    }
-        }
-        else {
+                handleMediaAction(action,chosen);
+            }
+        } else {
             searchNotFound();
         }
-
     }
 
-
     private void searchCategory(String genre) {
-        ArrayList<Media> yearList = manager.searchMediaByGenre(genre);
-        if (!(yearList == null)) {
+        ArrayList<Media> genreList = manager.searchMediaByGenre(genre);
+        if (!(genreList.isEmpty())) {
             ui.displayMessage("Film/ serie som matcher genren:");
-            for (Media m : yearList) {
-                System.out.println("1)" + m);
+            for(int i = 0; i < genreList.size(); i++){
+                System.out.println(i + 1 + ") " + genreList.get(i));
             }
         } else {
             searchNotFound();
@@ -227,7 +225,7 @@ public class StreamingService {
         private void searchByYear ( int searchedYear){
 
             ArrayList<Media> yearList = manager.searchMediaByYear(searchedYear);
-            if (!(yearList == null)) {
+            if (!(yearList.isEmpty())) {
                 ui.displayMessage("Film/ serie som matcher titlen:");
                 for (Media m : yearList) {
                     System.out.println("1)" + m);
@@ -251,6 +249,41 @@ public class StreamingService {
             showMenu();
 
         }
+
+    public void handleMediaAction(int action, Media chosen) {
+        switch (action) {
+            case 1:
+                //chosen
+                currentUser.addSeenMedia(chosen);
+                handlePostSearchAction(true);  // Mediet er afspillet
+                break;
+            case 2:
+                currentUser.addSavedMedia(chosen);
+                handlePostSearchAction(false);  // Mediet er gemt til Se senere
+                break;
+            case 3:
+                showMenu();  // Gå tilbage til hovedmenu
+                break;
+            default:
+                ui.displayMessage("Ugyldigt valg. Prøv igen.");
+                break;
+        }
+    }
+
+    public void handlePostSearchAction(boolean mediaPlayed) {
+        if (mediaPlayed) {
+            ui.displayMessage("Mediet er nu afspillet.");
+        } else {
+            ui.displayMessage("Mediet er gemt til Se senere.");
+        }
+
+        boolean continueSearch = ui.promptBinary("Vil du søge efter en anden film/serie? Y/N");
+        if (continueSearch) {
+            search();  // Sender brugeren tilbage til søgning
+        } else {
+            showMenu();  // Sender brugeren tilbage til hovedmenuen
+        }
+    }
 
 
 
