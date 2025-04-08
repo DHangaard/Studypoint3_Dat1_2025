@@ -85,9 +85,9 @@ public class TextUI {
 
         displayMessage(message);
 
-        int year = promptInteger("Fødselsår: ");
-        int month = promptInteger("Fødselsmåned: ");
-        int day = promptInteger("Fødselsdag: ");
+        int year = promptInteger("Fødselsår (YYYY): ");
+        int month = promptInteger("Fødselsmåned (MM): ");
+        int day = promptInteger("Fødselsdag (DD): ");
 
         LocalDate birthday = LocalDate.of(year,month,day);
 

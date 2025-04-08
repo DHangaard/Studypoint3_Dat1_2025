@@ -24,7 +24,7 @@ public class AccountManager {
             this.accounts.put(username, acc);
             appendUserData(acc);
         } else {
-            ui.displayMessage("Error: Username already taken"); // Translate String to dansih
+            ui.displayMessage("Error: Username already taken"); // Translate String to danish
         }
     }
 
@@ -36,8 +36,12 @@ public class AccountManager {
             String username = values[0].trim();
             String password = values[1].trim();
             String name = values[2].trim();
-            LocalDate birthday = LocalDate.parse(values[3].trim());
+            LocalDate birthdate = LocalDate.parse(values[3].trim());
             //Boolean child = parseBoolean(values[4]);
+
+            // Create HashMap with Account
+            Account acc = new Account(username, password, name, birthdate);
+            this.accounts.put(username, acc);
 
             // This might be causing issues:
             // createAccount(username,password,name,birthday);
@@ -45,19 +49,6 @@ public class AccountManager {
         }
     }
 
-    /*
-    // Save for single user only!
-    public void saveUserData() {
-        ArrayList<String> userData = new ArrayList<>();
-        accounts.forEach( (k,v) -> userData.add(v.toString()));
-
-        io.saveData(userData, path, "username, password, name, birthday");
-    }
-    */
-
-    public void appendUserData(Account account) {
-        io.appendData(account.toString(), path);
-    }
 
 
     public boolean isUserNameAndPasswordCorrect(String userName, String password){
@@ -76,4 +67,19 @@ public class AccountManager {
     return false;
     }
 
+
+
+    public void appendUserData(Account account) {
+        io.appendData(account.toString(), path);
+    }
 }
+
+    /*
+    // Save for single user only!
+    public void saveUserData() {
+        ArrayList<String> userData = new ArrayList<>();
+        accounts.forEach( (k,v) -> userData.add(v.toString()));
+
+        io.saveData(userData, path, "username, password, name, birthday");
+    }
+    */
