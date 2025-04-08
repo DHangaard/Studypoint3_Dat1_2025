@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.time.LocalDate.now;
 
@@ -13,16 +14,18 @@ public class Account {
     private LocalDate birthday;
     private int age;
     private boolean isChild;
+    private boolean isAdmin;
     private ArrayList<Media> seenMedia;
     private ArrayList<Media> savedMedia;
 
     // Constructor
-    public Account(String username, String password, String name, LocalDate birthdate){
+    public Account(String username, String password, String name, LocalDate birthdate) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.birthday = birthdate;
         this.isChild = true;
+        this.isAdmin = false;
         this.seenMedia = new ArrayList<>();
         this.savedMedia = new ArrayList<>();
         isAgeLessThan10(birthdate);
@@ -30,6 +33,25 @@ public class Account {
     }
 
     // Methods
+    private boolean makeThisAccountAdmin(String Password) {
+        String adminPassword = "iAmAdmin-1234";
+        if (password.equals(adminPassword)) {
+            this.isAdmin = true;
+            return true;
+        }
+        return false;
+    }
+
+    // Revise this - maybe use void instead of boolean in returnvalue
+    private void makeAnotherAccountAdmin(HashMap<String, Account> accounts, String username){
+        accounts.forEach((k, v) -> {
+            if (k.equalsIgnoreCase(username)) {
+                v.makeThisAccountAdmin("iAmAdmin-1234");
+            }
+        } );
+    }
+
+
     private void isAgeLessThan10(LocalDate date){
        LocalDate convertYear = now().ofEpochDay(-3652);
        if(date.isBefore(convertYear)){
@@ -84,7 +106,5 @@ public class Account {
         return this.savedMedia;
     }
 
-
-
-
 }
+
