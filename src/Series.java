@@ -38,6 +38,7 @@ public class Series extends Media {
         return this.title + " , " + this.releaseYear + "-" + this.endYear + " , " + this.genre + " , " + this.rating + ", Seasons: " + this.seasons.size();
     }
 
+
     public int getReleaseYear(){
         return this.releaseYear;
     }

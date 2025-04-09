@@ -34,11 +34,9 @@ public class Admin extends Account{
         // add a new movie
     }
 
-
     public void removeMedia(String title) {
         // Remove media, either tile series
     }
-
 
     protected void changeMediaTitle(String oldTitle, String newTitle){
     }

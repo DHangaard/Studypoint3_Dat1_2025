@@ -69,6 +69,7 @@ public class MediaManager {
             for (String g : values[2].split(",")) {
                 genre.add(g.trim());
             }
+
             //Rating
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));
 
@@ -112,7 +113,17 @@ public class MediaManager {
 
     public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeason){
         String seasonCSV = "";
+        String genreCSV = "";
         Iterator i = episodeAndSeason.iterator();
+        Iterator j = genre.iterator();
+
+        while (j.hasNext()) {
+            if (!j.hasNext()) {
+                genreCSV += j.next() + ";";
+            }
+            genreCSV += j.next() + ", ";
+        }
+
         while (i.hasNext()) {
             if (!i.hasNext()) {
                 seasonCSV += i.next() + ";";
@@ -121,7 +132,7 @@ public class MediaManager {
         }
         Series s = new Series(title, releaseYear, endYear, genre, rating);
         series.add(s);
-        String seriesAndSeasonsCSV = s.toString() + " " + seasonCSV;
+        String seriesAndSeasonsCSV = title + "; " + releaseYear + "-" + endYear + "; " + genreCSV + rating + "; " + " " + seasonCSV;
         io.appendData(seriesAndSeasonsCSV, seriesPath);
     }
 
@@ -180,6 +191,7 @@ public class MediaManager {
         }
         return result;
     }
+
 
 
     public ArrayList<Media> getMediaList(){

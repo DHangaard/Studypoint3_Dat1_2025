@@ -8,7 +8,8 @@ public class StreamingService {
     // Attributes
     TextUI ui;
     private MediaManager manager;
-    private Account currentUser;
+    private Account media;
+    private Login login;
     private ArrayList<String> choices;
     private boolean continueSearch;
 
@@ -17,25 +18,25 @@ public class StreamingService {
     public StreamingService(Account user){
         this.ui = new TextUI();
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
-        this.currentUser = user;
+        this.login = new Login("metFlix");
+        this.media = user;
         this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
         this.manager.loadSeriesData();
         this.manager.loadMovieData();
         this.continueSearch = false;
     }
 
-    // Methods
     public void welcomeScreen(){
-    ui.displayMessage("Velkommen tilbage " + currentUser.getName());
+    ui.displayMessage("Velkommen tilbage " + media.getName());
     showMenu();
 
     }
 
-
     public void showMenu(){
 
         ui.displayMessage("Hovedmenu:");
-        int choice = ui.promptInteger("1. Search"+"\n"+"2. Show seen media"+"\n"+"3. Show saved media"+"\n"+ "4. Logout"+"\n"+ "5. Exit to main menu");
+        int choice = ui.promptInteger("1. Search"+"\n"+"2. Show seen media"+"\n" +
+                "3. Show saved media"+"\n" + "4. SaveSeries" + "\n"+ "5. Logout");
 
                 //Switch case med valget
         switch (choice){
@@ -45,7 +46,9 @@ public class StreamingService {
             break;
             case 3: showSavedMedia();
             break;
-            case 4: logOut();
+            case 4: saveSeries();
+            break;
+            case 5: logOut();
             break;
             //case 5:
             default: ui.displayMessage("Ugyldigt valgt vælg et tal mellem 1-5");
@@ -53,27 +56,44 @@ public class StreamingService {
         }
     }
 
-
     public void showSeenMedia(){
-        ArrayList<Media> seenMedia = currentUser.getSeenMedia();
+        ArrayList<Media> seenMedia = media.getSeenMedia();
         if(!(seenMedia.isEmpty())) {
+            ui.displayMessage("Liste over sete film og serier");
             for (int i = 0; i < seenMedia.size(); i++) {
                 System.out.println(i + 1 + ") " + seenMedia.get(0));
             }
-            chooseMedia(seenMedia);
-
+            boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
+            if(play) {
+                chooseMedia(seenMedia);
+            }
+            else {
+                showMenu();
+            }
         } else {
-            ui.displayMessage("Ingen film eller serier, er tilføjet til sete film");
+            ui.displayMessage("Ingen film eller serier, er tilføjet til sete film" + "\n" + "du vil blive sendt tilbage til hovedmenu");
+            showMenu();
         }
     }
 
     public void showSavedMedia(){
-        ArrayList<String> mediaAsStrings = new ArrayList<>();
-        for(int i = 0; i < currentUser.getSavedMedia().size(); i++){
-            Media m = currentUser.getSavedMedia().get(i);
-            mediaAsStrings.add((i + 1) + ") " + m);
+        ArrayList<Media> savedMedia = media.getSavedMedia();
+        if(!(savedMedia.isEmpty())) {
+            ui.displayMessage("Liste over gemte film og serier");
+            for (int i = 0; i < savedMedia.size(); i++) {
+                System.out.println(i + 1 + ") " + savedMedia.get(0));
+            }
+            boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
+            if(play) {
+                chooseMedia(savedMedia);
+            }
+            else {
+                showMenu();
+            }
+        } else {
+            ui.displayMessage("Ingen film eller serier, er tilføjet til gemte film" + "\n" + "du vil blive sendt tilbage til hovedmenu");
+            showMenu();
         }
-        ui.displayList(mediaAsStrings,"Gemte film/serie");
     }
 
     public void chooseMedia(ArrayList<Media> media){
@@ -81,32 +101,16 @@ public class StreamingService {
             int choice = ui.promptInteger("Vælg en film/serie vha. nummer");
 
             //Get the chosen movie/serie
-            if (choice > 0 && choice <= currentUser.getSeenMedia().size()) {
-                Media chosenMedia = currentUser.getSeenMedia().get(choice - 1);
-                ui.displayMessage("Du har valgt " + chosenMedia);
+            if (choice > 0 && choice <= media.size()) {
+                Media chosenMedia = media.get(choice - 1);
+                chosenMedia.playMedia();
+                showMenu();
                 break;
             } else {
                 ui.displayMessage("Ugyldig valg. Prøv igen");
             }
         }
     }
-
-    public void chooseSavedMedia(){
-        showSavedMedia();
-        while(true) {
-            int choice = ui.promptInteger("Vælg en film/serie vha. nummer");
-
-            //Get the chosen movie/serie
-            if (choice > 0 && choice <= currentUser.getSavedMedia().size()) {
-                Media chosenMedia = currentUser.getSavedMedia().get(choice - 1);
-                ui.displayMessage("Du har valgt " + chosenMedia);
-                break;
-            } else {
-                ui.displayMessage("Ugyldig valg. Prøv igen");
-            }
-        }
-    }
-
 
     public void saveMovie() {
         //TODO : IF USER IS ADMIN!
@@ -121,7 +125,6 @@ public class StreamingService {
         }
 
         double rating = ui.promptDouble("Giv et bedømmelsestal af filmen");
-
         manager.saveMediaData(title, year, genre, rating);
     }
 
@@ -133,7 +136,7 @@ public class StreamingService {
 
         String title = ui.promptText("Skriv en titel");
         int releaseYear = ui.promptInteger("Skriv årstal serien er fra");
-        int endYear = ui.promptInteger("Skriv årstal serien kører til (eller tryk enter");
+        int endYear = ui.promptInteger("Skriv årstal serien kører til (eller tryk enter)");
 
         //while for at få liste af genrer og sæsoner/episoder
         boolean addingGenres = true;
@@ -152,15 +155,6 @@ public class StreamingService {
         manager.saveMediaData(title, releaseYear, endYear, genre, rating, episodeAndSeasons);
 
     }
-    public void logOut(){
-
-    }
-
-
-    public void endStreamingService(){
-
-    }
-
 
     public void searchMenu(){
         ui.displayMessage("Søg efter film eller serier:");
@@ -184,10 +178,7 @@ public class StreamingService {
                 break;
             } else{
                 ui.displayMessage("Vælg venligst et tal mellem 1-5");
-
-
             }
-
         }
     }
 
@@ -228,11 +219,11 @@ public class StreamingService {
         switch (action) {
             case 1:
                 chosenMedia.playMedia();
-                currentUser.addSeenMedia(chosenMedia);
+                media.addSeenMedia(chosenMedia);
                 handlePostSearchAction(true);  // Mediet er afspillet
                 break;
             case 2:
-                currentUser.addSavedMedia(chosenMedia);
+                media.addSavedMedia(chosenMedia);
                 handlePostSearchAction(false);  // Mediet er gemt til Se senere
                 break;
             case 3:
@@ -263,7 +254,6 @@ public class StreamingService {
         } else {
             searchNotFound();
         }
-
     }
 
     public void handlePostSearchAction(boolean mediaPlayed) {
@@ -281,7 +271,13 @@ public class StreamingService {
         }
     }
 
+    public void logOut(){
+        ui.displayMessage("Du vil blive logget af, tak for denne gange");
+        login.start();
+    }
 
+    public void endStreamingService(){
 
+    }
 
 }
