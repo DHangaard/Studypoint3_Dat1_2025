@@ -92,9 +92,11 @@ public class StreamingService {
 
                         case 6:
                             saveMovie();
+                            showMenu();
                             return;
                         case 7:
                             saveSeries();
+                            showMenu();
                             return;
 
                         default:
