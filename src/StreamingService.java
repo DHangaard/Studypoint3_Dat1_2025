@@ -225,6 +225,13 @@ public class StreamingService {
 
         }
 
+    // Play media
+    public void playMedia(Media chosenMedia){
+        chosenMedia.playMedia();
+        media.addSeenMedia(chosenMedia);
+        handlePostSearchAction(true);  // Mediet er afspillet
+    }
+
     public void handleMediaAction(int action, Media chosenMedia) {
         while (true) {
             switch (action) {
