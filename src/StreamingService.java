@@ -33,35 +33,40 @@ public class StreamingService {
     }
 
     public void showMenu(){
+        if(!(currentUser.getAdmin())) {
 
-        ui.displayMessage("Hovedmenu:");
-        int choice = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
-                "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n" + "6) saveSeries()");
+            ui.displayMessage("Hovedmenu:");
+            int choice = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
+                    "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n" + "6) saveSeries()");
 
-        while(true){
-            switch (choice) {
-                case 1:
-                    searchMenu();
-                    return;
-                case 2:
-                    showSeenMedia();
-                    return;
-                case 3:
-                    showSavedMedia();
-                    return;
-                case 4:
-                    logOut();
-                    return;
-                case 5:
-                    endProgram();
-                    return; // not necessary - left in for aesthetics
-                case 6:
-                    saveSeries();
-                    return;
-                default:
-                    choice = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-5");
+            while (true) {
+                switch (choice) {
+                    case 1:
+                        searchMenu();
+                        return;
+                    case 2:
+                        showSeenMedia();
+                        return;
+                    case 3:
+                        showSavedMedia();
+                        return;
+                    case 4:
+                        logOut();
+                        return;
+                    case 5:
+                        endProgram();
+                        return; // not necessary - left in for aesthetics
+                    case 6:
+                        saveSeries();
+                        return;
+                    default:
+                        choice = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-5");
 
+                }
             }
+        } else{
+            saveSeries();
+            saveMovie();
         }
     }
 
@@ -70,7 +75,7 @@ public class StreamingService {
         if(!(seenMedia.isEmpty())) {
             ui.displayMessage("Liste over sete film og serier");
             for (int i = 0; i < seenMedia.size(); i++) {
-                System.out.println(i + 1 + ") " + seenMedia.get(0));
+                System.out.println(i + 1 + ") " + seenMedia.get(i));
             }
             boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
             if(play) {
@@ -90,9 +95,10 @@ public class StreamingService {
         if(!(savedMedia.isEmpty())) {
             ui.displayMessage("Liste over gemte film og serier:" + "\n");
             for (int i = 0; i < savedMedia.size(); i++) {
-                System.out.println(i + 1 + ") " + savedMedia.get(0));
+                System.out.println(i + 1 + ") " + savedMedia.get(i));
             }
             boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
+
             if(play) {
                 chooseMedia(savedMedia);
             }
@@ -112,8 +118,7 @@ public class StreamingService {
             //Get the chosen movie/serie
             if (choice > 0 && choice <= media.size()) {
                 Media chosenMedia = media.get(choice - 1);
-                chosenMedia.playMedia();
-                showMenu();
+                playMediaAndSaveToList(chosenMedia);
                 break;
             } else {
                 ui.displayMessage("Ugyldig valg. Prøv igen");
@@ -226,22 +231,24 @@ public class StreamingService {
         }
 
     // Play media
-    public void playMedia(Media chosenMedia){
+    public void playMediaAndSaveToList(Media chosenMedia){
         chosenMedia.playMedia();
-        media.addSeenMedia(chosenMedia);
+        currentUser.addSeenMedia(chosenMedia);
         handlePostSearchAction(true);  // Mediet er afspillet
     }
+
 
     public void handleMediaAction(int action, Media chosenMedia) {
         while (true) {
             switch (action) {
                 case 1:
-                    chosenMedia.playMedia();
-                    media.addSeenMedia(chosenMedia);
-                    handlePostSearchAction(true);  // Mediet er afspillet
+                    playMediaAndSaveToList(chosenMedia);
+                    //chosenMedia.playMedia();
+                    //currentUser.addSeenMedia(chosenMedia);
+                    //handlePostSearchAction(true);  // Mediet er afspillet
                     return;
                 case 2:
-                    media.addSavedMedia(chosenMedia);
+                    currentUser.addSavedMedia(chosenMedia);
                     handlePostSearchAction(false);  // Mediet er gemt til Se senere
                     return;
                 case 3:
