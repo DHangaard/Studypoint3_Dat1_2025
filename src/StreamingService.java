@@ -173,29 +173,43 @@ public class StreamingService {
     public void searchMenu(){
         ui.displayMessage("Søg efter film eller serier:");
         int choice = 0;
+
         while(true) {
             choice = ui.promptInteger("1) Søg efter titel" + "\n" + "2) Søg efter årstal" + "\n" + "3) Søg efter genre" + "\n" + "4) Søg efter rating");
+
             if(choice == 1){
-                String title = ui.promptText("Hvilken titel vil du søge efter?");
-              searchTitle(title);
-              break;
-            } else if(choice == 2){
-                int year = ui.promptInteger("Hvilet årstal vil du søge efter?");
+                String title = ui.promptText("Hvilken titel ønsker du at søge efter?");
+                searchTitle(title);
+                break;
+            }
+            else if(choice == 2){
+                int year = ui.promptInteger("Hvilket årstal ønsker du at søge efter?");
                 searchByYear(year);
                 break;
-            }else if (choice == 3){
-                String genre = ui.promptText("Hvilen genre vil du søge efter?");
+            }
+            else if (choice == 3){
+                String genre = ui.promptText("Hvilken genre ønsker du at søge efter?");
                 searchCategory(genre);
                 break;
-            }else if (choice == 4){
-                double rating = ui.promptDouble("Hvilken minimum rating, vil du søge efter?");
+            }
+            else if (choice == 4){
+                double rating = -1;
+                // Validere rating indtil den er indenfor det ønskede interval (1-10)
+                while (rating < 1 || rating > 10) {
+                    rating = ui.promptDouble("Hvilken minimum rating ønsker du at søge efter (1-10)?");
+                    if (rating < 1 || rating > 10) {
+                        ui.displayMessage("Venligst indtast et tal mellem 1 og 10.");
+                    }
+                }
                 searchByRating(rating);
                 break;
-            } else{
-                ui.displayMessage("Vælg venligst et tal mellem 1-5");
+
+            } else {
+                ui.displayMessage("Vælg venligst et tal mellem 1-4.");
             }
         }
     }
+
 
     private void searchTitle(String title){
         ArrayList<Media> searchTitles = manager.searchMediaByTitle(title);
