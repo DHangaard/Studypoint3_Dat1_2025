@@ -53,8 +53,12 @@ public class AccountManager {
             LocalDate birthdate = LocalDate.parse(values[3].trim());
             boolean isAdmin = Boolean.parseBoolean(values[4].trim());
 
+
             // Create HashMap with Account
             Account acc = new Account(username, password, name, birthdate);
+            if (isAdmin) {
+             acc.setAdmin(true);
+            }
             this.accounts.put(username, acc);
 
         }

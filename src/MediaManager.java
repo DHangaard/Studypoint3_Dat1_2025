@@ -209,6 +209,28 @@ public class MediaManager {
 
     }
 
+    public ArrayList<String> getGenreList(){
+        ArrayList<String> genres = new ArrayList<>();
+        genres.add("Family");
+        genres.add("Documentary");
+        genres.add("Crime");
+        genres.add("Comedy");
+        genres.add("Action");
+        genres.add("Drama");
+        genres.add("Thriller");
+        genres.add("Biography");
+        genres.add("History");
+        genres.add("Fantasy");
+        genres.add("Mystery");
+        genres.add("Horror");
+        genres.add("Animation");
+        genres.add("Adventure");
+        genres.add("Romance");
+        genres.add("Sport");
+        genres.add("War");
+        return genres;
+    }
+
     public ArrayList<Media> getMediaList(){
         return mediaList;
     }
