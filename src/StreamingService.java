@@ -8,7 +8,7 @@ public class StreamingService {
     // Attributes
     TextUI ui;
     private MediaManager manager;
-    private Account media;
+    private Account currentUser;
     private Login login;
     private ArrayList<String> choices;
     private boolean continueSearch;
@@ -19,7 +19,7 @@ public class StreamingService {
         this.ui = new TextUI();
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
         this.login = new Login("metFlix");
-        this.media = user;
+        this.currentUser = user;
         this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
         this.manager.loadSeriesData();
         this.manager.loadMovieData();
@@ -27,7 +27,7 @@ public class StreamingService {
     }
 
     public void welcomeScreen(){
-    ui.displayMessage("Velkommen tilbage " + media.getName());
+    ui.displayMessage("Velkommen tilbage " + currentUser.getName());
     showMenu();
 
     }
@@ -66,7 +66,7 @@ public class StreamingService {
     }
 
     public void showSeenMedia(){
-        ArrayList<Media> seenMedia = media.getSeenMedia();
+        ArrayList<Media> seenMedia = currentUser.getSeenMedia();
         if(!(seenMedia.isEmpty())) {
             ui.displayMessage("Liste over sete film og serier");
             for (int i = 0; i < seenMedia.size(); i++) {
@@ -86,7 +86,7 @@ public class StreamingService {
     }
 
     public void showSavedMedia(){
-        ArrayList<Media> savedMedia = media.getSavedMedia();
+        ArrayList<Media> savedMedia = currentUser.getSavedMedia();
         if(!(savedMedia.isEmpty())) {
             ui.displayMessage("Liste over gemte film og serier");
             for (int i = 0; i < savedMedia.size(); i++) {
@@ -113,6 +113,7 @@ public class StreamingService {
             if (choice > 0 && choice <= media.size()) {
                 Media chosenMedia = media.get(choice - 1);
                 chosenMedia.playMedia();
+                currentUser.addSeenMedia(chosenMedia);
                 showMenu();
                 break;
             } else {
@@ -228,11 +229,11 @@ public class StreamingService {
         switch (action) {
             case 1:
                 chosenMedia.playMedia();
-                media.addSeenMedia(chosenMedia);
+                currentUser.addSeenMedia(chosenMedia);
                 handlePostSearchAction(true);  // Mediet er afspillet
                 break;
             case 2:
-                media.addSavedMedia(chosenMedia);
+                currentUser.addSavedMedia(chosenMedia);
                 handlePostSearchAction(false);  // Mediet er gemt til Se senere
                 break;
             case 3:
