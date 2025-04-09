@@ -79,11 +79,11 @@ public class StreamingService {
     public void showSavedMedia(){
         ArrayList<Media> savedMedia = media.getSavedMedia();
         if(!(savedMedia.isEmpty())) {
-            ui.displayMessage("Liste over gemte film og serier");
+            ui.displayMessage("Liste over gemte film og serier:" + "\n");
             for (int i = 0; i < savedMedia.size(); i++) {
                 System.out.println(i + 1 + ") " + savedMedia.get(0));
             }
-            boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
+            boolean play = ui.promptBinary("Vil du afspille et af medierne(Y), eller gå tilbage til hovedmenu(N)? Y/N");
             if(play) {
                 chooseMedia(savedMedia);
             }
@@ -91,7 +91,7 @@ public class StreamingService {
                 showMenu();
             }
         } else {
-            ui.displayMessage("Ingen film eller serier, er tilføjet til gemte film" + "\n" + "du vil blive sendt tilbage til hovedmenu");
+            ui.displayMessage("Ingen film eller serier, er tilføjet til gemte film." + "\n" + "Du vil blive sendt tilbage til hovedmenu.");
             showMenu();
         }
     }
@@ -174,7 +174,8 @@ public class StreamingService {
                 searchCategory(genre);
                 break;
             }else if (choice == 4){
-                double rating = ui.promptDouble("hvilken rating vil du søge efter?");
+                double rating = ui.promptDouble("Hvilken minimum rating, vil du søge efter?");
+                searchByRating(rating);
                 break;
             } else{
                 ui.displayMessage("Vælg venligst et tal mellem 1-5");
@@ -216,22 +217,26 @@ public class StreamingService {
         }
 
     public void handleMediaAction(int action, Media chosenMedia) {
-        switch (action) {
-            case 1:
-                chosenMedia.playMedia();
-                media.addSeenMedia(chosenMedia);
-                handlePostSearchAction(true);  // Mediet er afspillet
-                break;
-            case 2:
-                media.addSavedMedia(chosenMedia);
-                handlePostSearchAction(false);  // Mediet er gemt til Se senere
-                break;
-            case 3:
-                showMenu();  // Gå tilbage til hovedmenu
-                break;
-            default:
-                ui.displayMessage("Ugyldigt valg. Prøv igen.");
-                break;
+        while (true) {
+            switch (action) {
+                case 1:
+                    chosenMedia.playMedia();
+                    media.addSeenMedia(chosenMedia);
+                    handlePostSearchAction(true);  // Mediet er afspillet
+                    return;
+                case 2:
+                    media.addSavedMedia(chosenMedia);
+                    handlePostSearchAction(false);  // Mediet er gemt til Se senere
+                    return;
+                case 3:
+                    showMenu();  // Gå tilbage til hovedmenu
+                    return;
+                default:
+                    ui.displayMessage("Ugyldigt valg. Prøv igen.");
+                    action = ui.promptInteger("1) Vil du afspille mediet?" + "\n" +
+                            "2) Gemme en film/ serie i Se senere" + "\n" +
+                            "3) Gå tilbage til hovedmenu");
+            }
         }
     }
 
@@ -241,16 +246,25 @@ public class StreamingService {
             for (int i = 0; i < media.size(); i++) {
                 System.out.println(i + 1 + ") " + media.get(i));
             }
+            ui.displayMessage("");
 
-            boolean confirmSelection = ui.promptBinary("Vil du se en af disse titler? Y/N ");
+            boolean confirmSelection = ui.promptBinary("Vil du udforske en af titlerne? Y/N ");
 
             if (confirmSelection) {
                 int mediaChoice = ui.promptInteger("Vælg venligst en af medierne ");
-                Media chosen = media.get(mediaChoice - 1);
-                int action = ui.promptInteger("1) Vil du afspille mediet?" + "\n" + "2) Gemme en film/ serie i Se senere" + "\n" + "3) Gå tilbage til hovedmenu");
 
-                handleMediaAction(action, chosen);
+                if (mediaChoice > 0 && mediaChoice <= media.size()) {
+                    Media chosen = media.get(mediaChoice - 1);
+                    int action = ui.promptInteger("1) Vil du afspille mediet?" + "\n" + "2) Gemme en film/ serie i Se senere" + "\n" + "3) Gå tilbage til hovedmenu");
+                    handleMediaAction(action, chosen);
+                } else {
+                    ui.displayMessage("Ugyldigt valg. Vælg et tal mellem 1 og " + media.size());
+                    searchEngine(media, querry); // Giver brugeren en ny chance
+                }
+            } else {
+                showMenu();
             }
+
         } else {
             searchNotFound();
         }
