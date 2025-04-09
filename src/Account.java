@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +29,10 @@ public class Account {
         this.isAdmin = false;
         this.seenMedia = new ArrayList<>();
         this.savedMedia = new ArrayList<>();
-        isAgeLessThan10(birthdate);
+        calculateAge(birthdate);
+        isChildBasedOnAge();
+
+        //isAgeLessThan10(birthdate);
 
     }
 
@@ -56,6 +60,21 @@ public boolean makeThisAccountAdmin(String Password) {
        if(date.isBefore(convertYear)){
            this.isChild = false;
        }
+    }
+
+    private void calculateAge(LocalDate birthdate) {
+        LocalDate currentDate = now();
+        Period period = Period.between(birthdate, currentDate);
+        this.age = period.getYears();
+    }
+
+    private void isChildBasedOnAge() {
+        // Sætter isChild til true, hvis brugerens alder er under 10
+        if (this.age < 10) {
+            this.isChild = true;
+        } else {
+            this.isChild = false;
+        }
     }
 
     public String getUsername(){
@@ -108,8 +127,13 @@ public boolean makeThisAccountAdmin(String Password) {
     public void setAdmin(boolean admin) {
         this.isAdmin = admin;
     }
+
     public boolean getAdmin(){
         return this.isAdmin;
+    }
+
+    public boolean isChild(){
+        return this.isChild;
     }
 }
 

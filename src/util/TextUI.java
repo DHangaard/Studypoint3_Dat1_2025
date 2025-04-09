@@ -193,8 +193,6 @@ public class TextUI {
         return isAnswerYes;
     }
 
-
-    // Should this be in TextIO? Maybe to specific
     public ArrayList<String> promptChoice( ArrayList<String> options, int limit, String msg){
 
         displayList(options, "");

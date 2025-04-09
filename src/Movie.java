@@ -13,10 +13,10 @@ public class Movie extends Media {
 
     //Methods
     @Override
-    public String toString(){
-        return "Titel: " + this.title + ", Årstal: " + this.year + ", Genre: " + this.genre + " " + ", Rating: " + rating;
-
+    public String toString() {
+        return "🎞️ Film – 🎬 Titel: \"" + this.title + "\", 📅 År: " + this.year + ", 🎭 Genre: " + this.genre + ", ⭐ Rating: " + rating;
     }
+
     public String getTitle(){
         return this.title;
     }
