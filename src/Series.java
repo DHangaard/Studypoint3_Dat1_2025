@@ -35,9 +35,8 @@ public class Series extends Media {
 
     @Override
     public String toString() {
-        return this.title + " , " + this.releaseYear + "-" + this.endYear + " , " + this.genre + " , " + this.rating + ", Seasons: " + this.seasons.size();
+        return "Title: " + this.title + ", " + "Årstal: " + this.releaseYear + "-" + this.endYear + ", " + "Genre: " +  this.genre + ", " + "Rating: " + this.rating + ", Sæsoner: " + this.seasons.size();
     }
-
 
     public int getReleaseYear(){
         return this.releaseYear;
@@ -63,6 +62,6 @@ public class Series extends Media {
     }
 
     public void playMedia(){
-        System.out.println("Afspiller nu " + this.title + "....");
+        System.out.println("Afspiller nu: \"" + this.title + "\" \uD83C\uDFAC");
     }
 }

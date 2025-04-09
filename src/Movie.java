@@ -14,8 +14,8 @@ public class Movie extends Media {
     //Methods
     @Override
     public String toString(){
-        String s = title + " " + year + " " + genre + " " + " " + rating;
-        return s;
+        return "Titel: " + this.title + ", Årstal: " + this.year + ", Genre: " + this.genre + " " + ", Rating: " + rating;
+
     }
     public String getTitle(){
         return this.title;
@@ -32,7 +32,8 @@ public class Movie extends Media {
     }
 
     public void playMedia(){
-        System.out.println("Afspiller nu " + this.title + "....");
+        System.out.println("Afspiller nu: \"" + this.title + "\" \uD83C\uDFAC");
+        ;
     }
 
 
