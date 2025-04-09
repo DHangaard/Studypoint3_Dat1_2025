@@ -28,8 +28,8 @@ class StreamingService{
 }
 
 class Main{
-- Login start
- + static void main(String[] args)
++ Login login
++ static void main(String[] args)
 }
 
 class Movie{
@@ -82,13 +82,23 @@ class Account{
 - LocalDate birthday
 - int age
 - boolean isChild
-+ Account(String username, String password, String name, LocalDate birthday)
-- int convertAge(LocalDate date)
+- boolean isAdmin
+- ArrayList<Media> seenMedia
+- ArrayList<Media> savedMedia
++ Account(String username, String password, String name, LocalDate birthdate)
++ boolean makeThisAccountAdmin(String password)
+- void makeAnotherAccountAdmin(HashMap<String, Account> accounts, String username)
+- int isAgeLessThan10(LocalDate date)
 + Account getUsername()
++ String getName()
++ int getAge
++ String getPassword()
 + void setUsername(String newUsername)
 + void setPassword(String oldPassword, String newPassword)
-+ String getName()
-+ int getAge()
++ void addSeenMedia(Media media)
++ void addSavedMedia(Media media)
++ void setAdmin(boolean admin)
++ boolean getAdmin()
 }
 
 
@@ -107,18 +117,24 @@ class AccountManager {
 package "util" {
     class TextUI {
     - Scanner scan
-    + boolean promptBinary(String msg)
-    + String promptText(String msg)
-    + int promptNumeric(String msg)
+    + void displayMessage(String message)
+    + void displayMessage(Object object)
+    + void displayList(ArrayList<String> list, String message)
+    + String promptText(String message)
+    + int promptInteger(String message)
+    + int promptDouble(String message)
+    + LocalDate promptBirthday()
+    + boolean isValidDay(int year, int month, int day)
+    + boolean isLeapYear(int year)
+    + boolean promptBinary(String message)
     + ArrayList<String> promptChoice(ArrayList<String> options, int limit, String msg)
-    + void displayMessage(String msg)
-    + void displayList(ArrayList<String> list, String msg)
     }
 }
 
 package "util" {
     class FileIO{
-    + void saveData(ArrayList<String> data, String path, String header)
+    + void saveData(ArrayList<String> list, String path, String header)
+    + void appendData(String object, String path)
     + ArrayList<String> readData(String path)
     + String[] readData(String path, int length)
     }
