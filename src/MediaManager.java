@@ -112,33 +112,45 @@ public class MediaManager {
 
 
     public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeason){
-        String seasonCSV = "";
-        String genreCSV = "";
-        Iterator i = episodeAndSeason.iterator();
-        Iterator j = genre.iterator();
 
-        while (j.hasNext()) {
-            if (!j.hasNext()) {
-                genreCSV += j.next() + ";";
+        StringBuilder genreCSVBuilder = new StringBuilder();
+        for (int g = 0; g < genre.size(); g++) {
+            genreCSVBuilder.append(genre.get(g));
+            if (g < genre.size() - 1) {
+                genreCSVBuilder.append(", ");
             }
-            genreCSV += j.next() + ", ";
         }
+        String genreCSV = genreCSVBuilder.toString();
 
-        while (i.hasNext()) {
-            if (!i.hasNext()) {
-                seasonCSV += i.next() + ";";
+        StringBuilder seasonCSVBuilder = new StringBuilder();
+        for (int g = 0; g < episodeAndSeason.size(); g++) {
+            seasonCSVBuilder.append(episodeAndSeason.get(g));
+            if (g < episodeAndSeason.size() - 1) {
+                seasonCSVBuilder.append(", ");
             }
-            seasonCSV += i.next() + ", ";
         }
+        String seasonCSV = seasonCSVBuilder.toString();
+
         Series s = new Series(title, releaseYear, endYear, genre, rating);
         series.add(s);
-        String seriesAndSeasonsCSV = title + "; " + releaseYear + "-" + endYear + "; " + genreCSV + rating + "; " + " " + seasonCSV;
+        String seriesAndSeasonsCSV = title + "; " + releaseYear + "-" + endYear + "; " + genreCSV + "; " + rating + "; " + seasonCSV + ";";
         io.appendData(seriesAndSeasonsCSV, seriesPath);
     }
 
     public void saveMediaData(String title, int year, ArrayList<String> genre, double rating){
         Movie m = new Movie(title, year, genre, rating);
-        io.appendData(m.toString(), moviePath);
+
+        StringBuilder genreCSVBuilder = new StringBuilder();
+        for (int g = 0; g < genre.size(); g++) {
+            genreCSVBuilder.append(genre.get(g));
+            if (g < genre.size() - 1) {
+                genreCSVBuilder.append(", ");
+            }
+        }
+        String genreCSV = genreCSVBuilder.toString();
+        movies.add(m);
+        String movieCSV = title + "; " + year + "; " + genreCSV + "; " + rating;
+        io.appendData(movieCSV, moviePath);
     }
 
     public ArrayList<Media> searchMediaByTitle(String title){
@@ -192,7 +204,10 @@ public class MediaManager {
         return result;
     }
 
+    public void removeMedia(String title) {
+        searchMediaByTitle(title);
 
+    }
 
     public ArrayList<Media> getMediaList(){
         return mediaList;

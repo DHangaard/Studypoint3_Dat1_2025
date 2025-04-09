@@ -35,24 +35,33 @@ public class StreamingService {
     public void showMenu(){
 
         ui.displayMessage("Hovedmenu:");
-        int choice = ui.promptInteger("1. Search"+"\n"+"2. Show seen media"+"\n" +
-                "3. Show saved media"+"\n" + "4. SaveSeries" + "\n"+ "5. Logout");
+        int choice = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
+                "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n" + "6) saveSeries()");
 
-                //Switch case med valget
-        switch (choice){
-            case 1: searchMenu();
-            break;
-            case 2: showSeenMedia();
-            break;
-            case 3: showSavedMedia();
-            break;
-            case 4: saveSeries();
-            break;
-            case 5: logOut();
-            break;
-            //case 5:
-            default: ui.displayMessage("Ugyldigt valgt vælg et tal mellem 1-5");
+        while(true){
+            switch (choice) {
+                case 1:
+                    searchMenu();
+                    return;
+                case 2:
+                    showSeenMedia();
+                    return;
+                case 3:
+                    showSavedMedia();
+                    return;
+                case 4:
+                    logOut();
+                    return;
+                case 5:
+                    endProgram();
+                    return; // not necessary - left in for aesthetics
+                case 6:
+                    saveSeries();
+                    return;
+                default:
+                    choice = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-5");
 
+            }
         }
     }
 
@@ -276,8 +285,10 @@ public class StreamingService {
         login.start();
     }
 
-    public void endStreamingService(){
-
+    public void endProgram(){
+        // Save user state to CSV
+        // manager.saveUserState(path)
+        System.exit(0);
     }
 
 }

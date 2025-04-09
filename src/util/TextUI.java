@@ -39,7 +39,6 @@ public class TextUI {
     public String promptText(String message){
         displayMessage(message);
         String input = scanner.nextLine();
-
         return input;
     }
 
@@ -171,21 +170,27 @@ public class TextUI {
     }
 
 
-
-
-
-
-
     public boolean promptBinary(String message){
-        String choice = promptText(message);
-        if (choice.equalsIgnoreCase("y")){
-            return true;
-        } else if (choice.equalsIgnoreCase("n")){
-            return false;
-        } else {
-            promptBinary("[ERROR] Input either 'y' or 'n': ");
+        boolean isChoosing = true;
+        boolean isAnswerYes = false;
+        String choice;
+
+        while (isChoosing){
+            choice = promptText(message);
+            if (choice.equalsIgnoreCase("y")){
+                isAnswerYes = true;
+                isChoosing = false;
+
+            } else if (choice.equalsIgnoreCase("n")){
+                isAnswerYes = false;
+                isChoosing = false;
+
+            } else if (!choice.equalsIgnoreCase("y") || !choice.equalsIgnoreCase("n")) {
+                displayMessage("[ERROR] indtast enten 'y' eller 'n': ");
+            }
         }
-        return false;
+
+        return isAnswerYes;
     }
 
 
