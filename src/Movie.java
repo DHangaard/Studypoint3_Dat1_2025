@@ -31,15 +31,11 @@ public class Movie extends Media {
         return this.rating;
     }
 
-
-    //@Override
     public void playMedia(){
-
+        System.out.println("Afspiller nu " + this.title + "....");
     }
 
-    //@Override
-    public void stopMedia(){
 
-    }
+
 
 }

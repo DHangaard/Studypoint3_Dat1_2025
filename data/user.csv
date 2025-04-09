@@ -1,5 +1,7 @@
-username, password, name, birthday
-Admin, 123, Adminton, 1990-01-01
-DHangaard, Kodeord1, Daniel, 1991-07-05
-TineM, Tine1234, Tine, 1961-12-27
-EmilXV, 123, Emil, 1997-12-24
+username, password, name, birthday, admin
+Admin, 123, Adminton, 1990-01-01, true
+DHangaard, Kodeord1, Daniel, 1991-07-05, false
+TineM, Tine1234, Tine, 1961-12-27, false
+EmilXV, 123, Emil, 1997-12-24, false
+M, 1, Morten, 1989-05-17, false
+C, 1, Carl, 1984-12-04, true

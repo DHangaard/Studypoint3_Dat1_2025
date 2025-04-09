@@ -60,4 +60,8 @@ public class Series extends Media {
     public double getRating() {
         return this.rating;
     }
+
+    public void playMedia(){
+        System.out.println("Afspiller nu " + this.title + "....");
+    }
 }

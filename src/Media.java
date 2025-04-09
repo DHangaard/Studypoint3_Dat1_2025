@@ -16,4 +16,6 @@ public abstract class Media {
     public abstract ArrayList<String> getGenre();
 
     public abstract double getRating();
+
+    public abstract void playMedia();
 }

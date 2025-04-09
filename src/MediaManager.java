@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import util.FileIO;
 import util.TextUI;
+import java.util.Iterator;
 import java.util.List;
 
 public class MediaManager {
@@ -93,26 +94,40 @@ public class MediaManager {
         }
     }
 
-    public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating){
-        ArrayList<String> toSave = new ArrayList<>();
-        loadSeriesData();
-        ArrayList<Series> currentSave = getSeries();
-        currentSave.add(new Series(title, releaseYear, endYear, genre, rating));
-        for(Series s : currentSave){
-            toSave.add(currentSave.toString());
+    /*
+    // Add all the seasons and spisodes
+    for (int i = 0; i < epsiodesAndSeason.size(); i++){
+        seasonCSV += s;
+
+        // Add comma except after last
+        for (int j = ; j < (epsiodesAndSeason.size()-1); j++){
+            seasonCSV += ", "
         }
-        io.saveData(toSave, seriesPath, "title; yearspan; genres; rating; seasons/episodes");
+    }
+
+    // Add semicolon after last
+    seasonCSV += ";";
+     */
+
+
+    public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeason){
+        String seasonCSV = "";
+        Iterator i = episodeAndSeason.iterator();
+        while (i.hasNext()) {
+            if (!i.hasNext()) {
+                seasonCSV += i.next() + ";";
+            }
+            seasonCSV += i.next() + ", ";
+        }
+        Series s = new Series(title, releaseYear, endYear, genre, rating);
+        series.add(s);
+        String seriesAndSeasonsCSV = s.toString() + " " + seasonCSV;
+        io.appendData(seriesAndSeasonsCSV, seriesPath);
     }
 
     public void saveMediaData(String title, int year, ArrayList<String> genre, double rating){
-        ArrayList<String> toSave = new ArrayList<>();
-        loadMovieData();
-        ArrayList<Movie> currentSave = getMovie();
-        currentSave.add(new Movie(title, year, genre, rating));
-        for(Movie m : currentSave){
-            toSave.add(currentSave.toString());
-        }
-        io.saveData(toSave, moviePath, "title; year; genres; rating");
+        Movie m = new Movie(title, year, genre, rating);
+        io.appendData(m.toString(), moviePath);
     }
 
     public ArrayList<Media> searchMediaByTitle(String title){
@@ -125,7 +140,7 @@ public class MediaManager {
         return result;
     }
 
-    public ArrayList<Media> searchMediaByRating(int minimumRating){
+    public ArrayList<Media> searchMediaByRating(double minimumRating){
         ArrayList<Media> result = new ArrayList<>();
         for(Media m: this.mediaList){
             if(m.getRating()>=minimumRating){

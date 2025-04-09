@@ -18,26 +18,33 @@ public class Admin extends Account{
 
     // Methods
 
-    protected void addMedia(Series series){
-
+    protected void addSeries(Series series){
+        // add a new series
     }
 
+    protected void addSeason(Series series, int seasons){
+        // add a number of empty seasons to a series
+    }
 
-    protected void addMedia(Movie movie){
+    protected void addEpisode(Series series, int season, int episodes){
+        // add a number of episodes to a season
+    }
 
-
+    protected void addMovie(Movie movie){
+        // add a new movie
     }
 
 
     public void removeMedia(String title) {
-
+        // Remove media, either tile series
     }
 
 
-    protected void changeMedia(String oldTitle, String newTitle){
-
+    protected void changeMediaTitle(String oldTitle, String newTitle){
     }
 
+    protected void changeMediaRating(String oldTitle, String newTitle){
+    }
 
     protected void addAdmin(Account account){
 

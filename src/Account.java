@@ -33,10 +33,9 @@ public class Account {
     }
 
     // Methods
-    private boolean makeThisAccountAdmin(String Password) {
+public boolean makeThisAccountAdmin(String Password) {
         String adminPassword = "iAmAdmin-1234";
         if (password.equals(adminPassword)) {
-            this.isAdmin = true;
             return true;
         }
         return false;
@@ -86,7 +85,7 @@ public class Account {
 
     @Override
     public String toString(){
-        String s = this.username + ", " + this.password + ", " + this.name + ", " + this.birthday;
+        String s = this.username + ", " + this.password + ", " + this.name + ", " + this.birthday + ", " + this.isAdmin;
         return s;
     }
 
@@ -106,5 +105,11 @@ public class Account {
         return this.savedMedia;
     }
 
+    public void setAdmin(boolean admin) {
+        this.isAdmin = admin;
+    }
+    public boolean getAdmin(){
+        return this.isAdmin;
+    }
 }
 

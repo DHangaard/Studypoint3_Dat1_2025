@@ -21,6 +21,11 @@ public class TextUI {
         System.out.println(message);
     }
 
+    // Overloaded displayMessage that prints an objects toString()
+    public void displayMessage(Object object){
+        System.out.println(object.toString());
+    }
+
 
     // Review this method
     public void displayList(ArrayList<String>list, String msg) {
@@ -83,16 +88,92 @@ public class TextUI {
 
     public LocalDate promptBirthday(String message) {
 
+        // int year = promptInteger("Fødselsår (YYYY): ");
+        // int month = promptInteger("Fødselsmåned (MM): ");
+        // int day = promptInteger("Fødselsdag (DD): ");
+
         displayMessage(message);
 
-        int year = promptInteger("Fødselsår (YYYY): ");
-        int month = promptInteger("Fødselsmåned (MM): ");
-        int day = promptInteger("Fødselsdag (DD): ");
+        int year = 0, month = 0, day = 0;
 
+        // Get valid birth year (e.g. between 1900 and current year)
+        while (true) {
+            displayMessage("indtast dit fødselsår (e.g., 1900 - 2025): ");
+            if (scanner.hasNextInt()) {
+                year = scanner.nextInt();
+                if (year >= 1900 && year <= 2025) {
+                    break;
+                } else {
+                    System.out.println("ugyldigt år. venligst indtast et år mellem 1900 og 2025.");
+                }
+            } else {
+                System.out.println("ugyldigt input. indtast venligst et årstal.");
+                scanner.next(); // Clear the invalid input
+            }
+        }
+
+        // Get valid month (1-12)
+        while (true) {
+            System.out.print("indtast din fødselsmåned (1-12): ");
+            if (scanner.hasNextInt()) {
+                month = scanner.nextInt();
+                if (month >= 1 && month <= 12) break;
+                else System.out.println("ugyldig måned. indtast venligst en værdi mellem 1 og 12.");
+            } else {
+                System.out.println("ugyldigt input. Venligst indtast et tal .");
+                scanner.next();
+            }
+        }
+
+        // Get valid day based on year and month
+        while (true) {
+            System.out.print("indtast din fødselsdag: ");
+            if (scanner.hasNextInt()) {
+                day = scanner.nextInt();
+                if (isValidDay(year, month, day)) break;
+                else System.out.println("ugyldig dag i månedet og året. prøv igen.");
+            } else {
+                System.out.println("ugyldig input. venligst indtast et tal.");
+                scanner.next();
+            }
+        }
+
+        System.out.println("din fødselsdag er: " + year + "-" + month + "-" + day);
         LocalDate birthday = LocalDate.of(year,month,day);
 
         return birthday;
     }
+
+
+    // Helper function to validate day for given month and year
+    public static boolean isValidDay(int year, int month, int day) {
+        int[] daysInMonth = {
+                31, // Jan
+                isLeapYear(year) ? 29 : 28, // Feb
+                31, // Mar
+                30, // Apr
+                31, // May
+                30, // Jun
+                31, // Jul
+                31, // Aug
+                30, // Sep
+                31, // Oct
+                30, // Nov
+                31  // Dec
+        };
+
+        return day >= 1 && day <= daysInMonth[month - 1];
+    }
+
+    // Check if it's a leap year
+    public static boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+
+
+
+
+
 
 
     public boolean promptBinary(String message){
