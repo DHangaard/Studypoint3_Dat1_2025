@@ -1,3 +1,4 @@
+package article;
 import java.util.ArrayList;
 
 public class Series extends Media {
@@ -11,6 +12,9 @@ public class Series extends Media {
         super(title, genre, rating);
         this.releaseYear = releaseYear;
         this.endYear = endYear;
+        this.seasons = new ArrayList<>();
+    }public Series(String title, String year,ArrayList<String> genre, double rating){
+        super(title, genre, rating);
         this.seasons = new ArrayList<>();
     }
 

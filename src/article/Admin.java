@@ -3,10 +3,9 @@
 *************************     DELETE THIS CLASS BEFORE PUBLISHING     *************************
 
  */
-
+package article;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class Admin extends Account{
 

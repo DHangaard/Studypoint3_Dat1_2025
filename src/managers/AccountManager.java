@@ -1,3 +1,5 @@
+package managers;
+import article.*;
 import util.FileIO;
 import util.TextUI;
 import java.time.LocalDate;
@@ -85,7 +87,7 @@ public class AccountManager {
         return false;
     }
 
-    boolean isUserInSystem(String username) {
+    public boolean isUserInSystem(String username) {
         return this.accounts.containsKey(username);
     }
 

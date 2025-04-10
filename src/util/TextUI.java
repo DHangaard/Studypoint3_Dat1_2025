@@ -52,7 +52,7 @@ public class TextUI {
 
             try {
                 input = scanner.nextInt();
-                scanner.nextLine(); // Flush
+                scanner.nextLine(); // Flush (at få "\n" med så vi ikke ender med en "\n" som det første ved næste gang vi får input )
                 keepGoing = false;
 
             } catch (InputMismatchException e) {

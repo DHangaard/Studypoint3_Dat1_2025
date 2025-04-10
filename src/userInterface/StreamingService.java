@@ -1,5 +1,11 @@
+package userInterface;
+import managers.*;
+import article.*;
+import util.FileIO;
 import util.TextUI;
 
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +13,7 @@ public class StreamingService {
 
     // Attributes
     TextUI ui;
+    FileIO io;
     private MediaManager manager;
     private Account currentUser;
     private Login login;
@@ -20,7 +27,7 @@ public class StreamingService {
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
         this.login = new Login("metFlix");
         this.currentUser = user;
-        this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
+        this.choices = new ArrayList<>(List.of("1. Søg","2. Vis sete media","3. vis gemte media","4. Log ud", "5. Exit til hovedmenuen"));
         this.manager.loadSeriesData();
         this.manager.loadMovieData();
         this.continueSearch = false;
@@ -71,7 +78,9 @@ public class StreamingService {
     }
 
     public void showSeenMedia(){
-        ArrayList<Media> seenMedia = currentUser.getSeenMedia();
+        io = new FileIO();
+        ArrayList<Media> seenMedia = io.loadSeenMediacsv(this.currentUser);
+
         if(!(seenMedia.isEmpty())) {
             ui.displayMessage("Liste over sete film og serier");
             for (int i = 0; i < seenMedia.size(); i++) {
@@ -232,8 +241,10 @@ public class StreamingService {
 
     // Play media
     public void playMediaAndSaveToList(Media chosenMedia){
+        io = new FileIO();
         chosenMedia.playMedia();
         currentUser.addSeenMedia(chosenMedia);
+        io.writeSeenByUser(chosenMedia,this.currentUser);
         handlePostSearchAction(true);  // Mediet er afspillet
     }
 

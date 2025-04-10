@@ -1,9 +1,9 @@
+package managers;
 import java.util.ArrayList;
-import java.util.Arrays;
+import article.*;
+
 import util.FileIO;
 import util.TextUI;
-import java.util.Iterator;
-import java.util.List;
 
 public class MediaManager {
     FileIO io;

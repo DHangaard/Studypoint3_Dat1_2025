@@ -1,3 +1,4 @@
+package article;
 public class Season {
     private int episodes;
     private int season;

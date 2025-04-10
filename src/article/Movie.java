@@ -1,3 +1,4 @@
+package article;
 import java.util.ArrayList;
 
 public class Movie extends Media {
@@ -10,6 +11,7 @@ public class Movie extends Media {
         super(title, genre, rating);
         this.year = year;
     }
+
 
     //Methods
     @Override
