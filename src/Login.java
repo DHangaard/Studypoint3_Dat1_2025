@@ -81,22 +81,57 @@ public class Login {
     }
 
     public void createAccount() {
+
         String username = "";
         boolean isUserNameTaken = true;
 
-                while(isUserNameTaken) {
-                    username = ui.promptText("Indtast e-mail");
-                    if (manager.isUserInSystem(username)) {
-                        ui.displayMessage("Der er allerede oprettet en bruger med denne e-mail");
-                    }
-                    else {
-                        isUserNameTaken = false;
+        while(isUserNameTaken) {
+            username = ui.promptText("Indtast e-mail");
+            //Hvis bruger giver tomt input
+            if(username == null || username.trim().isEmpty()){
+                ui.displayMessage("E-Mail kan ikke være tom.");
+                continue;
+            }
+            // Email validering
+            if (!username.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+                ui.displayMessage("E-mail format er ugyldigt.");
+                continue;
+            }
+
+            // Hvis brugernavnet er optaget
+            if (manager.isUserInSystem(username)) {
+                ui.displayMessage("Der er allerede oprettet en bruger med denne e-mail");
+
+            } else {
+                isUserNameTaken = false;
                     }
                 }
-                String password = createPassword();
-                String name = ui.promptText("Indtast et brugernavn");
-                LocalDate birthdate = ui.promptBirthday("Indtast fødselsoplysninger");
-                manager.createAccount(username,password,name,birthdate);
+
+        //Tjek om bruger opfylder password krav
+        boolean validPassword = false;
+        String password = "";
+
+        while (!validPassword) {
+            password = ui.promptText("Indtast et password:\nKrav: min. 6 tegn, min 1 stort bogstav, min 1. lille bogstav, min 1 tal:");
+            validPassword = isValidPassword(password);
+        }
+
+        String name = "";
+        boolean validName = false;
+        //Tjek om bruger opfylder navne krav
+        while (!validName){
+            name = ui.promptText("Indtast dit navn: Minimum 2 tegn langt.");
+            if(name.trim().length() < 2) {
+                ui.displayMessage("Brugernavn skal mindst være 2 tegn langt.");
+            }else{
+                validName = true;
+            }
+
+        }
+        //Tjek om bruger opfylder fødelsdags krav
+        LocalDate birthdate = ui.promptBirthday("Indtast fødselsoplysninger");
+        //Opret bruger i systemet
+        manager.createAccount(username,password,name,birthdate);
     }
 
     public void endProgram(){
@@ -105,4 +140,29 @@ public class Login {
         ui.displayMessage("Tak for denne gang! Vi håber, du havde det sjovt! 🎉"+ "\n" + "Farvel og på gensyn! 👋");
         System.exit(0);
     }
+
+    private boolean isValidPassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            ui.displayMessage("Password kan ikke være tomt.");
+            return false;
+        }
+        if (password.length() < 6) {
+            ui.displayMessage("Password skal være mindst 6 tegn langt.");
+            return false;
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            ui.displayMessage("Password skal indeholde mindst et stort bogstav.");
+            return false;
+        }
+        if (!password.matches(".*[a-z].*")) {
+            ui.displayMessage("Password skal indeholde mindst et lille bogstav.");
+            return false;
+        }
+        if (!password.matches(".*\\d.*")) {
+            ui.displayMessage("Password skal indeholde mindst et tal.");
+            return false;
+        }
+        return true;
+    }
+
 }
