@@ -57,7 +57,7 @@ public class TextUI {
 
             } catch (InputMismatchException e) {
                 scanner.nextLine(); // Flush - flush in catch to avoid infinite loop
-                displayMessage("[ERROR] " + e);
+                displayMessage("Venligst indtast et tal. Prøv igen.");
             }
         }
         return input;
@@ -78,7 +78,7 @@ public class TextUI {
 
             } catch (InputMismatchException e) {
                 scanner.nextLine(); // Flush - flush in catch to avoid infinite loop
-                displayMessage("[ERROR] " + e);
+                displayMessage("Venligst indtast et tal. Prøv igen");
             }
         }
         return input;
@@ -97,47 +97,47 @@ public class TextUI {
 
         // Get valid birth year (e.g. between 1900 and current year)
         while (true) {
-            displayMessage("indtast dit fødselsår (e.g., 1900 - 2025): ");
+            displayMessage("Indtast dit fødselsår (e.g., 1900 - 2025): ");
             if (scanner.hasNextInt()) {
                 year = scanner.nextInt();
                 if (year >= 1900 && year <= 2025) {
                     break;
                 } else {
-                    System.out.println("ugyldigt år. venligst indtast et år mellem 1900 og 2025.");
+                    System.out.println("Ugyldigt år. venligst indtast et år mellem 1900 og 2025.");
                 }
             } else {
-                System.out.println("ugyldigt input. indtast venligst et årstal.");
+                System.out.println("Ugyldigt input. indtast venligst et årstal.");
                 scanner.next(); // Clear the invalid input
             }
         }
 
         // Get valid month (1-12)
         while (true) {
-            System.out.print("indtast din fødselsmåned (1-12): ");
+            System.out.print("Indtast din fødselsmåned (1-12): ");
             if (scanner.hasNextInt()) {
                 month = scanner.nextInt();
                 if (month >= 1 && month <= 12) break;
-                else System.out.println("ugyldig måned. indtast venligst en værdi mellem 1 og 12.");
+                else System.out.println("Ugyldig måned. indtast venligst en værdi mellem 1 og 12.");
             } else {
-                System.out.println("ugyldigt input. Venligst indtast et tal .");
+                System.out.println("Ugyldigt input. Venligst indtast et tal .");
                 scanner.next();
             }
         }
 
         // Get valid day based on year and month
         while (true) {
-            System.out.print("indtast din fødselsdag: ");
+            System.out.print("Indtast din fødselsdag: ");
             if (scanner.hasNextInt()) {
                 day = scanner.nextInt();
                 if (isValidDay(year, month, day)) break;
-                else System.out.println("ugyldig dag i månedet og året. prøv igen.");
+                else System.out.println("Ugyldig dag i månedet og året. prøv igen.");
             } else {
-                System.out.println("ugyldig input. venligst indtast et tal.");
+                System.out.println("Ugyldig input. venligst indtast et tal.");
                 scanner.next();
             }
         }
 
-        System.out.println("din fødselsdag er: " + year + "-" + month + "-" + day);
+        System.out.println("Din fødselsdag er: " + year + "-" + month + "-" + day);
         LocalDate birthday = LocalDate.of(year,month,day);
 
         return birthday;
@@ -186,7 +186,7 @@ public class TextUI {
                 isChoosing = false;
 
             } else if (!choice.equalsIgnoreCase("y") || !choice.equalsIgnoreCase("n")) {
-                displayMessage("[ERROR] indtast enten 'y' eller 'n': ");
+                displayMessage("Venligst indtast enten 'y' eller 'n': ");
             }
         }
 
