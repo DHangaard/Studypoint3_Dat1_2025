@@ -32,15 +32,18 @@ public class StreamingService {
 
     }
 
-    public void showMenu(){
-        if(!(currentUser.getAdmin())) {
+    public void showMenu() {
+
+        if (!currentUser.getAdmin()) {
 
             ui.displayMessage("Hovedmenu:");
             int choice = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
-                    "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n" + "6) saveSeries()");
+                    "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n");
 
             while (true) {
+
                 switch (choice) {
+
                     case 1:
                         searchMenu();
                         return;
@@ -56,19 +59,53 @@ public class StreamingService {
                     case 5:
                         endProgram();
                         return; // not necessary - left in for aesthetics
-                    case 6:
-                        saveSeries();
-                        return;
                     default:
                         choice = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-5");
 
                 }
             }
-        } else{
-            saveSeries();
-            saveMovie();
         }
-    }
+                ui.displayMessage("Hovedmenu:");
+                int choiceAdmin = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
+                        "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n" +
+                        "6) Tilføj ny film" + "\n" + "7) Tilføj ny serie" + "\n");
+
+                while (true) {
+
+                    switch (choiceAdmin) {
+
+                        case 1:
+                            searchMenu();
+                            return;
+                        case 2:
+                            showSeenMedia();
+                            return;
+                        case 3:
+                            showSavedMedia();
+                            return;
+                        case 4:
+                            logOut();
+                            return;
+                        case 5:
+                            endProgram();
+                            return; // not necessary - left in for aesthetics
+
+                        case 6:
+                            saveMovie();
+                            showMenu();
+                            return;
+                        case 7:
+                            saveSeries();
+                            showMenu();
+                            return;
+
+                        default:
+                            choiceAdmin = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-7");
+
+                    }
+            }
+        }
+
 
     public void showSeenMedia(){
         ArrayList<Media> seenMedia = currentUser.getSeenMedia();
@@ -127,14 +164,19 @@ public class StreamingService {
     }
 
     public void saveMovie() {
-        //TODO : IF USER IS ADMIN!
         ArrayList<String> genre = new ArrayList<>();
         String title = ui.promptText("Skriv en titel");
         int year = ui.promptInteger("Skriv årstal filmen er fra");
 
         boolean addingGenres = true;
         while (addingGenres) {
-            genre.add(ui.promptText("Angiv genre"));
+            ui.displayList(manager.getGenreList(), "Mulige genrer at tilføje:");
+            String genreToAdd = ui.promptText("Angiv genre");
+            if (manager.getGenreList().contains(genreToAdd)){
+                genre.add(genreToAdd);
+            } else{
+                ui.displayMessage("Genren kunne ikke tilføjes, prøv igen");
+            }
             addingGenres = ui.promptBinary("Vil du tilføje en genre mere? (Y/N)");
         }
 
@@ -143,19 +185,24 @@ public class StreamingService {
     }
 
     public void saveSeries() {
-        //TODO : IF USER IS ADMIN ONLY!
         ArrayList<String> genre = new ArrayList<>();
         ArrayList<String> episodeAndSeasons = new ArrayList<>();
 
 
         String title = ui.promptText("Skriv en titel");
-        int releaseYear = ui.promptInteger("Skriv årstal serien er fra");
-        int endYear = ui.promptInteger("Skriv årstal serien kører til (eller tryk enter)");
+        int releaseYear = ui.promptInteger("Skriv årstal (YYYY) serien er fra");
+        int endYear = ui.promptInteger("Skriv årstal (YYYY) serien kører til eller skriv 0 hvis den ikke har slutår");
 
         //while for at få liste af genrer og sæsoner/episoder
         boolean addingGenres = true;
         while (addingGenres) {
-            genre.add(ui.promptText("Angiv genre"));
+            ui.displayList(manager.getGenreList(), "Mulige genrer at tilføje:");
+            String genreToAdd = ui.promptText("Angiv genre");
+            if (manager.getGenreList().contains(genreToAdd)){
+                genre.add(genreToAdd);
+        } else{
+            ui.displayMessage("Genren kunne ikke tilføjes, prøv igen");
+        }
             addingGenres = ui.promptBinary("Vil du tilføje en genre mere? (Y/N)");
         }
 
