@@ -274,8 +274,13 @@ public class StreamingService {
 
     // Play media
     public void playMediaAndSaveToList(Media chosenMedia){
-        chosenMedia.playMedia();
-        currentUser.addSeenMedia(chosenMedia);
+        if(chosenMedia instanceof Series){
+            Series series = (Series) chosenMedia;
+            series.chooseMediaAndEpisode(currentUser);
+        } else {
+            chosenMedia.playMedia();
+            currentUser.addSeenMedia(chosenMedia);
+        }
         handlePostSearchAction(true);  // Mediet er afspillet
     }
 

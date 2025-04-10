@@ -18,4 +18,5 @@ public abstract class Media {
     public abstract double getRating();
 
     public abstract void playMedia();
+    public abstract void playMedia(Account user, int seasonNumber, int episodeNumber);
 }

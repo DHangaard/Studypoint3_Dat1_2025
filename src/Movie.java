@@ -33,10 +33,11 @@ public class Movie extends Media {
 
     public void playMedia(){
         System.out.println("Afspiller nu: \"" + this.title + "\" \uD83C\uDFAC");
-        ;
+
     }
 
-
+    @Override
+    public void playMedia(Account user, int seasonNumber, int episodeNumber) {}
 
 
 }
