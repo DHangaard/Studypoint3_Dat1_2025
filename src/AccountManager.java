@@ -34,7 +34,7 @@ public class AccountManager {
     public String createAccountMessage(Account account){
         String message = "";
 
-        if (account.getAdmin()){
+        if (account.getIsAdmin()){
             message = "Brugeren er oprettet som administrator";
         } else {
             message = "Brugeren er oprettet";
@@ -87,7 +87,7 @@ public class AccountManager {
     }
 
     //
-    public void writeSeenByUser(Media media, Account user) {
+    public  void writeSeenByUser(Media media, Account user) {
         try {
             FileWriter writer = new FileWriter("data/userData/seenBy" + user.getUsername() + ".csv", true);
 
@@ -101,12 +101,84 @@ public class AccountManager {
         }
     }
 
-    boolean isUserInSystem(String username) {
-        return this.accounts.containsKey(username);
+    public ArrayList<Media> loadSeenMediacsv(Account user) {
+        ArrayList<String> mediaData = io.readusercsvData("data/userData/seenBy" + user.getUsername() + ".csv");
+        ArrayList<Media> mediaList = new ArrayList<>();
+
+
+        for (String s : mediaData) {
+            String[] parts = s.split("\n");
+            for (String part : parts) {
+                String[] values = part.split(";");
+                if (values.length < 4) {
+                    String title = values[0].trim();
+                    int year = Integer.parseInt(values[1].replaceAll("[^0-9.]", ""));
+
+                    //Fjerner mellemrum i genre
+                    ArrayList<String> genre = new ArrayList<>();
+                    for (String g : values[2].split(",")) {
+                        genre.add(g.trim());
+                    }
+
+                    double rating = Double.parseDouble(values[3].replaceAll("[^0-9.]", ""));
+
+
+                    Movie movie = new Movie(title, year, genre, rating);
+                    mediaList.add(movie);
+
+                } else {
+
+                    String title = values[0].trim();
+                    int startYear = Integer.parseInt(values[1].trim());
+                    String endYear = values[2].trim();
+
+                    //Fjerner mellemrum i genre
+                    ArrayList<String> genre = new ArrayList<>();
+                    for (String g : values[3].split(",")) {
+                        genre.add(g.trim());
+                    }
+                    String ratingFromFile = values[4].replaceAll("[^0-9.]", "");
+
+                    double rating = Double.parseDouble(ratingFromFile);
+
+
+                    Series series = new Series(title, startYear, endYear, genre, rating);
+                    mediaList.add(series);
+
+                }
+
+            }
+
+        }
+
+        return mediaList;
     }
 
-    boolean isUserAdmin(){
-    return false;
+    public HashMap<String, Account> getAccounts() {
+        return this.accounts;
+    }
+
+    public ArrayList<String> getNonAdmins() {
+        ArrayList<String> userdata = io.readData(this.path);
+        ArrayList<String> nonAdminList = new ArrayList<>();
+
+        for (String s : userdata) {
+            String[] values = s.split(",");
+            String username = values[0].trim();
+            boolean isAdmin = Boolean.parseBoolean(values[4].trim());
+            if(!isAdmin) {
+                nonAdminList.add(username);
+            }
+        }
+        return nonAdminList;
+    }
+
+    public void makeAnotherAccountAdmin(String username){
+        accounts.get(username).setAdmin(true);
+    }
+
+    public boolean isUserInSystem(String username) {
+        return this.accounts.containsKey(username);
     }
 
     public void appendUserData(Account account) {

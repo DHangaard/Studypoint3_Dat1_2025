@@ -8,6 +8,7 @@ public class StreamingService {
     // Attributes
     TextUI ui;
     private MediaManager manager;
+    private AccountManager accountManager;
     private Account currentUser;
     private Login login;
     private ArrayList<String> choices;
@@ -17,6 +18,7 @@ public class StreamingService {
 
     public StreamingService(Account user){
         this.ui = new TextUI();
+        this.accountManager = new AccountManager();
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
         this.login = new Login("Metflix");
         this.currentUser = user;
@@ -27,7 +29,7 @@ public class StreamingService {
     }
 
     public void welcomeScreen(){
-        if(currentUser.isChild()){
+        if(currentUser.getIsChild()){
             ui.displayMessage("Metflix Kids");
         }
     ui.displayMessage("\uD83C\uDF89 Velkommen tilbage " + currentUser.getName() +" 🎉");
@@ -36,7 +38,7 @@ public class StreamingService {
     }
 
     public void showMenu(){
-        if(!(currentUser.getAdmin())) {
+        if(!(currentUser.getIsAdmin())) {
 
             ui.displayMessage("\uD83D\uDCCB Hovedmenu:");
             int choice = ui.promptInteger("1)\uD83D\uDD0D Søg" + "\n" + "2)\uD83C\uDFA5 Vis tidligere sete film og serier" + "\n" +
@@ -59,7 +61,7 @@ public class StreamingService {
                         logOut();
                         return;
                     case 5:
-                        endProgram();
+                        login.endProgram();
                         return;
                     default:
                         choice = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-5");
@@ -70,7 +72,7 @@ public class StreamingService {
                 ui.displayMessage("Hovedmenu:");
                 int choiceAdmin = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
                         "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n" +
-                        "6) Tilføj ny film" + "\n" + "7) Tilføj ny serie" + "\n");
+                        "6) Tilføj ny film" + "\n" + "7) Tilføj ny serie" + "\n" + "8) Gør en anden bruger til admin" + "\n");
 
                 while (true) {
 
@@ -89,7 +91,7 @@ public class StreamingService {
                             logOut();
                             return;
                         case 5:
-                            endProgram();
+                            login.endProgram();
                             return; // not necessary - left in for aesthetics
 
                         case 6:
@@ -100,9 +102,12 @@ public class StreamingService {
                             saveSeries();
                             showMenu();
                             return;
-
+                        case 8:
+                            makeAnotherAdmin();
+                            showMenu();
+                            return;
                         default:
-                            choiceAdmin = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-7");
+                            choiceAdmin = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-8");
 
                     }
             }
@@ -110,7 +115,7 @@ public class StreamingService {
 
 
     public void showSeenMedia(){
-        ArrayList<Media> seenMedia = currentUser.getSeenMedia();
+        ArrayList<Media> seenMedia = accountManager.loadSeenMediacsv(currentUser);
         showMediaList(seenMedia, "sete film og serier");
     }
 
@@ -329,6 +334,7 @@ public class StreamingService {
             chosenMedia.playMedia();
             currentUser.addSeenMedia(chosenMedia);
         }
+        accountManager.writeSeenByUser(chosenMedia,currentUser);
         handlePostSearchAction(true);  // Mediet er afspillet
     }
 
@@ -360,7 +366,7 @@ public class StreamingService {
     public void searchEngine(ArrayList<Media> media, String querry) {
 
         // Hvis brugeren er et barn, skal vi filtrere listen til kun at inkludere "Family"-genren
-        if (currentUser.isChild()) {
+        if (currentUser.getIsChild()) {
             ArrayList<Media> filtered = new ArrayList<>();
             for (Media m : media) {
                 if (m.getGenre().contains("Family")) { // Kun medier med "Family" genre
@@ -415,18 +421,24 @@ public class StreamingService {
         }
     }
 
+    public void makeAnotherAdmin() {
+        String username;
+
+        while (true){
+            ui.displayList(accountManager.getNonAdmins(), "Brugere du kan ændre for: ");
+            username = ui.promptText("Skriv en andens brugernavn som du vil ændre til admin");
+            if (accountManager.getNonAdmins().contains(username)){
+                accountManager.makeAnotherAccountAdmin(username);
+                break;
+            }
+        }
+    }
+
     public void logOut(){
         ui.displayMessage("Du vil bliver nu logget af!");
         ui.displayMessage("Tak for denne gang, " + currentUser.getName() + "! Vi håber, du havde det sjovt! 🎉"+ "\n" + "Farvel og på gensyn! 👋");
         ui.displayMessage("");
         login.start();
-    }
-
-    public void endProgram(){
-        // Save user state to CSV
-        // manager.saveUserState(path)
-        ui.displayMessage("Tak for denne gang, " + currentUser.getName() + "! Vi håber, du havde det sjovt! 🎉"+ "\n" + "Farvel og på gensyn! 👋");
-        System.exit(0);
     }
 
 }

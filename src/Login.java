@@ -36,7 +36,7 @@ public class Login {
                 isChoosen = false;
 
             } else if (choice == 3) {
-                streamingService.endProgram();
+                endProgram();
 
             } else {
                 ui.displayMessage("Vælg venligst en gyldig mulighed");
@@ -85,17 +85,24 @@ public class Login {
         boolean isUserNameTaken = true;
 
                 while(isUserNameTaken) {
-                    username = ui.promptText("Indtast et ønsket brugernavn");
+                    username = ui.promptText("Indtast e-mail");
                     if (manager.isUserInSystem(username)) {
-                        ui.displayMessage("Brugernavn er optaget");
+                        ui.displayMessage("Der er allerede oprettet en bruger med denne e-mail");
                     }
                     else {
                         isUserNameTaken = false;
                     }
                 }
                 String password = createPassword();
-                String name = ui.promptText("Indtast dit fornavn");
+                String name = ui.promptText("Indtast et brugernavn");
                 LocalDate birthdate = ui.promptBirthday("Indtast fødselsoplysninger");
                 manager.createAccount(username,password,name,birthdate);
+    }
+
+    public void endProgram(){
+        // Save user state to CSV
+        // manager.saveUserState(path)
+        ui.displayMessage("Tak for denne gang! Vi håber, du havde det sjovt! 🎉"+ "\n" + "Farvel og på gensyn! 👋");
+        System.exit(0);
     }
 }

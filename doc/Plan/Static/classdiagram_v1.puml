@@ -1,35 +1,89 @@
 @startuml
 
+class Account{
+- String name
+- String username
+- String password
+- LocalDate birthday
+- int age
+- boolean isChild
+- boolean isAdmin
+- ArrayList<Media> seenMedia
+- ArrayList<Media> savedMedia
 
-class Admin{
-+ Admin(String username, String password, String name)
-# addMedia(Movie movie)
-# addMedia(Series serie)
-# removeMedia(String title)
-# changeMedia(String oldTitle, String newTitle)
-# addAdmin(Account newAdmin)
++ Account(String username, String password, String name, LocalDate birthdate)
++ boolean makeThisAccountAdmin(String password)
++ void makeAnotherAccountAdmin(HashMap<String, Account> accounts, String username)
+- void calculateAge(LocalDate date)
+- void isChildBasedOnAge()
++ Account getUsername()
++ String getName()
++ int getAge
++ String getPassword()
++ String toString()
++ void addSeenMedia(Media media)
++ void addSavedMedia(Media media)
++ void setAdmin(boolean admin)
++ boolean getIsAdmin()
++ boolean getIsChild()
 }
 
-class StreamingService{
-- TextUI ui
-- MediaManager manager
-+ StreamingService(Account account)
-+ void showMenu()
-+ void search()
-- void searchTitle(String title)
-- void searchCategory(String categoryName)
-- void searchByYear(int startYear, int endYear)
-- void searchByRating(double rating)
-- void displayMedia()
-+ void showSeenMedia(Account a)
-+ void showSavedMedia(Account a)
-+ void logOut()
-+ void endStreamingService()
+class AccountManager {
++ static FileIO io
++ static ArrayList<Account>
+- HashMap<String,Account> accounts
+- final String path
+
++ AccountManager()
++ void createAccount(String username, String password, String name, (LocalDate birthdate))
++ String createAccountMessage(Account account)
++ void loadUserData()
+- boolean promptAdmin()
++ boolean makeThisAccountAdmin(String password)
++ boolean isUserNameAndPasswordCorrect()
++ void writeSeenByUser(Media media, Account user)
++ ArrayList<Media> loadSeenMediacsv(Account user)
++ ArrayList<String> getNonAdmins()
++ void makeAnotherAccountAdmin(String username)
++ boolean isUserInSystem(String username)
++ void appendUserData(Account account)
++ Account getAccount(String username)
+}
+
+class Login {
+public static TextUI ui
+- AccountManager manager
+- StreamingService streamingservice
+- String appName
+
++ Login(String appName)
++ void start()
++ void login()
++ String createPassword()
++ void createAccount
++ void endProgram
 }
 
 class Main{
 + Login login
 + static void main(String[] args)
+}
+
+Abstract Media{
+# String title
+# List<String> genre
+# double rating
++ Media(String title, List<String> genre, double rating)
+}
+
+class MediaManager {
+- FileIO io
+- ArrayList<Media> media
++ MediaManager(String moviesPath, String seriesPath)
++ void loadMovieData()
++ void loadSeriesData()
++ void saveMediaData()
++ ArrayList<Media> media getMedia()
 }
 
 class Movie{
@@ -49,70 +103,23 @@ class Series{
 + Series(String title, List<String> releaseYear,List<String> genre, double rating, List<String> seasons)
 }
 
-class MediaManager {
-- FileIO io
-- ArrayList<Media> media
-+ MediaManager(String moviesPath, String seriesPath)
-+ void loadMovieData()
-+ void loadSeriesData()
-+ void saveMediaData()
-+ ArrayList<Media> media getMedia()
-}
-
-class Login {
+class StreamingService{
 - TextUI ui
-- AccountManager manager
-- StreamingService service
-+ Login(String appName)
-- void start()
-- void login()
+- MediaManager manager
++ StreamingService(Account account)
++ void showMenu()
++ void search()
+- void searchTitle(String title)
+- void searchCategory(String categoryName)
+- void searchByYear(int startYear, int endYear)
+- void searchByRating(double rating)
+- void displayMedia()
++ void showSeenMedia(Account a)
++ void showSavedMedia(Account a)
++ void logOut()
++ void endStreamingService()
 }
 
-Abstract Media{
-# String title
-# List<String> genre
-# double rating
-+ Media(String title, List<String> genre, double rating)
-}
-
-class Account{
-- String name
-- String username
-- String password
-- LocalDate birthday
-- int age
-- boolean isChild
-- boolean isAdmin
-- ArrayList<Media> seenMedia
-- ArrayList<Media> savedMedia
-+ Account(String username, String password, String name, LocalDate birthdate)
-+ boolean makeThisAccountAdmin(String password)
-- void makeAnotherAccountAdmin(HashMap<String, Account> accounts, String username)
-- int isAgeLessThan10(LocalDate date)
-+ Account getUsername()
-+ String getName()
-+ int getAge
-+ String getPassword()
-+ void setUsername(String newUsername)
-+ void setPassword(String oldPassword, String newPassword)
-+ void addSeenMedia(Media media)
-+ void addSavedMedia(Media media)
-+ void setAdmin(boolean admin)
-+ boolean getAdmin()
-}
-
-
-class AccountManager {
-- FileIO io
-- ArrayList<Account>
-+ AccountManager(String path)
-+ void createAccount()
-+ void loadUserData()
-+ void saveUserData()
-+ boolean isUserInSystem(String username)
-+ boolean isUserNameAndPasswordCorrect()
-+ boolean isUserAdmin(User u)
-}
 
 package "util" {
     class TextUI {
@@ -140,18 +147,12 @@ package "util" {
     }
  }
 
-interface MediaPlayer {
-+ playMedia()
-+ stopMedia()
-}
 
 Main *-- Login
 Login *-- AccountManager
 Login *-- StreamingService
 StreamingService *-- Account
 
-MediaPlayer <|.. Movie
-MediaPlayer <|.. Series
 AccountManager *-- Account
 AccountManager *-- FileIO
 Login *-- TextUI
@@ -160,7 +161,7 @@ StreamingService *-- TextUI
 StreamingService *-- MediaManager
 MediaManager *-- FileIO
 MediaManager *-- Media
-Account <|-- Admin
+
 
 Media <|-- Movie
 Media <|-- Series

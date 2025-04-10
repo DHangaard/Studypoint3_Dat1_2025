@@ -69,13 +69,17 @@ public class Series extends Media {
     public String toString() {
         return "📺 Serie – 🎬 Titel: \"" + this.title + "\", 📅 År: " + this.releaseYear + "-" + this.endYear + ", 📚 Sæsoner: " + this.seasons.size() + ", 🎭 Genre: " + this.genre + ", ⭐ Rating: " + this.rating;
     }
+    @Override
+    public String toStringcsv(){
+        return  this.title+ "; " + this.releaseYear+ "; "+ this.endYear+"; "+ this.genre+"; " + this.rating;
+    }
 
 
     public int getReleaseYear(){
         return this.releaseYear;
     }
 
-    public int getEndYear(){
+    public String getEndYear(){
         return this.endYear;
     }
 

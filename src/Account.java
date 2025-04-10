@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static java.time.LocalDate.now;
 
@@ -34,21 +33,12 @@ public class Account {
     }
 
 public boolean makeThisAccountAdmin(String Password) {
-        String adminPassword = "iAmAdmin-1234";
-        if (password.equals(adminPassword)) {
-            return true;
-        }
-        return false;
+    String adminPassword = "iAmAdmin-1234";
+    if (password.equals(adminPassword)) {
+        return true;
     }
-
-    // Revise this - maybe use void instead of boolean in returnvalue
-    private void makeAnotherAccountAdmin(HashMap<String, Account> accounts, String username){
-        accounts.forEach((k, v) -> {
-            if (k.equalsIgnoreCase(username)) {
-                v.makeThisAccountAdmin("iAmAdmin-1234");
-            }
-        } );
-    }
+    return false;
+}
 
     private void calculateAge(LocalDate birthdate) {
         LocalDate currentDate = now();
@@ -107,11 +97,11 @@ public boolean makeThisAccountAdmin(String Password) {
         this.isAdmin = admin;
     }
 
-    public boolean getAdmin(){
+    public boolean getIsAdmin(){
         return this.isAdmin;
     }
 
-    public boolean isChild(){
+    public boolean getIsChild(){
         return this.isChild;
     }
 }

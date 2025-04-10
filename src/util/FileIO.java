@@ -68,4 +68,18 @@ public class FileIO {
         }
         return data;
     }
+    public ArrayList<String> readusercsvData(String path) {
+        ArrayList<String> data = new ArrayList<>();
+        File file = new File(path);
+        try {
+            Scanner scan = new Scanner(file);
+
+            while (scan.hasNextLine()) {
+                String line = scan.nextLine();   //  "tess, 0"
+                data.add(line);
+            }
+        } catch (FileNotFoundException e) {
+        }
+        return data;
+    }
 }

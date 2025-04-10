@@ -18,7 +18,7 @@ public class Movie extends Media {
     }
     @Override
     public String toStringcsv() {
-        return this.title + "; "+ this.year + "; " + "; "+ this.genre + ";" + this.rating;
+        return this.title + "; "+ this.year + "; " + this.genre + ";" + this.rating;
     }
 
     public String getTitle(){
