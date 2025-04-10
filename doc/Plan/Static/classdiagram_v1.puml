@@ -18,7 +18,7 @@ class Account{
 - void isChildBasedOnAge()
 + Account getUsername()
 + String getName()
-+ int getAge
++ int getAge()
 + String getPassword()
 + String toString()
 + void addSeenMedia(Media media)
@@ -27,6 +27,8 @@ class Account{
 + boolean getIsAdmin()
 + boolean getIsChild()
 }
+
+
 
 class AccountManager {
 + static FileIO io
@@ -50,6 +52,8 @@ class AccountManager {
 + Account getAccount(String username)
 }
 
+
+
 class Login {
 public static TextUI ui
 - AccountManager manager
@@ -64,37 +68,71 @@ public static TextUI ui
 + void endProgram
 }
 
+
+
 class Main{
 + Login login
 + static void main(String[] args)
 }
 
+
+
 Abstract Media{
 # String title
-# List<String> genre
+# ArrayList<String> genre
 # double rating
-+ Media(String title, List<String> genre, double rating)
+
++ Media(String title, ArrayList<String> genre, double rating)
++ abstract String toStringcsv()
++ abstract String getTitle()
++ abstract ArrayList<String> getGenre()
++ abstract double getRating()
++ abstract void playMedia()
++ abstract void playMedia(Account user, int seasonNumber, int episodeNumber)
 }
 
+
+
 class MediaManager {
-- FileIO io
-- ArrayList<Media> media
-+ MediaManager(String moviesPath, String seriesPath)
++ FileIO io
+- TextUI ui
+- ArrayList<Media> mediaList
+- ArrayList<Movies> movies
+- ArrayList<Series> series
+- String moviePath
+- String SeriesPath
+
++ MediaManager(String moviePath, String seriesPath)
 + void loadMovieData()
 + void loadSeriesData()
-+ void saveMediaData()
-+ ArrayList<Media> media getMedia()
++ void saveMediaData(String title, int releaseYear, String endYear, ArrayList<String> genre, double rating, ArrayList<StringZ episodesAndSeasons)
++ void saveMediaData(String tilte, int year, ArrayList<String> genre, double rating)
++ ArrayList<Media> searchMediaByTitle(String title)
++ ArrayList<Media> searchMediaByRating(String title)
++ ArrayList<Media> searchMediaByGenre(String title)
++ ArrayList<Media> searchMediaByYear(String title)
++ ArrayList<String> getGenreList()
++ ArrayList<Media> getMediaList()
++ ArrayList<Series> getSeries()
++ ArrayList<Movie> getMovie()
++ void addMedia(Media media)
 }
+
+
 
 class Movie{
 - int year
-+ Movie(String title, int year, List<String> genre, double rating)
+
++ Movie(String title, int year, ArrayList<String> genre, double rating)
 + String toString()
++ String toStringcsv()
 + String getTitle()
 + int getYear()
-+ List<String> genre getGenre()
++ ArrayList<String> genre getGenre()
 + double getRating()
 }
+
+
 
 class Series{
 - List <String> yearSpan
@@ -102,6 +140,8 @@ class Series{
 - List <List> seasons
 + Series(String title, List<String> releaseYear,List<String> genre, double rating, List<String> seasons)
 }
+
+
 
 class StreamingService{
 - TextUI ui
@@ -119,6 +159,7 @@ class StreamingService{
 + void logOut()
 + void endStreamingService()
 }
+
 
 
 package "util" {
@@ -146,6 +187,7 @@ package "util" {
     + String[] readData(String path, int length)
     }
  }
+
 
 
 Main *-- Login

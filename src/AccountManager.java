@@ -92,7 +92,7 @@ public class AccountManager {
             FileWriter writer = new FileWriter("data/userData/seenBy" + user.getUsername() + ".csv", true);
 
 
-            writer.write(String.join(";", media.toStringcsv() + System.lineSeparator()));
+            writer.write(String.join(",", media.toStringcsv() + System.lineSeparator()));
 
 
             writer.close();
@@ -101,26 +101,26 @@ public class AccountManager {
         }
     }
 
+
     public ArrayList<Media> loadSeenMediacsv(Account user) {
         ArrayList<String> mediaData = io.readusercsvData("data/userData/seenBy" + user.getUsername() + ".csv");
         ArrayList<Media> mediaList = new ArrayList<>();
 
 
         for (String s : mediaData) {
-            String[] parts = s.split("\n");
+            String[] parts = s.split(";");
             for (String part : parts) {
-                String[] values = part.split(";");
-                if (values.length < 4) {
-                    String title = values[0].trim();
-                    int year = Integer.parseInt(values[1].replaceAll("[^0-9.]", ""));
+                if (parts.length < 4) {
+                    String title = parts[0].trim();
+                    int year = Integer.parseInt(parts[1].trim());
 
                     //Fjerner mellemrum i genre
                     ArrayList<String> genre = new ArrayList<>();
-                    for (String g : values[2].split(",")) {
+                    for (String g : parts[2].split(",")) {
                         genre.add(g.trim());
                     }
 
-                    double rating = Double.parseDouble(values[3].replaceAll("[^0-9.]", ""));
+                    double rating = Double.parseDouble(parts[3].trim());
 
 
                     Movie movie = new Movie(title, year, genre, rating);
@@ -128,18 +128,18 @@ public class AccountManager {
 
                 } else {
 
-                    String title = values[0].trim();
-                    int startYear = Integer.parseInt(values[1].trim());
-                    String endYear = values[2].trim();
+                    String title = parts[0].trim();
+                    int startYear = Integer.parseInt(parts[1].trim());
+                    String endYear = parts[2].trim();
 
                     //Fjerner mellemrum i genre
                     ArrayList<String> genre = new ArrayList<>();
-                    for (String g : values[3].split(",")) {
+                    for (String g : parts[3].split(",")) {
                         genre.add(g.trim());
                     }
-                    String ratingFromFile = values[4].replaceAll("[^0-9.]", "");
 
-                    double rating = Double.parseDouble(ratingFromFile);
+
+                    double rating = Double.parseDouble(parts[4].trim());
 
 
                     Series series = new Series(title, startYear, endYear, genre, rating);

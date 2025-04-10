@@ -24,6 +24,7 @@ public class MediaManager {
         this.ui = new TextUI();
     }
 
+
     public void loadMovieData(){
         // Hent movie filens data
         ArrayList<String> movieData = io.readData(this.moviePath);
