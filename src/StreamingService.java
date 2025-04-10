@@ -40,7 +40,7 @@ public class StreamingService {
 
             ui.displayMessage("\uD83D\uDCCB Hovedmenu:");
             int choice = ui.promptInteger("1)\uD83D\uDD0D Søg" + "\n" + "2)\uD83C\uDFA5 Vis tidligere sete film og serier" + "\n" +
-                    "3)\uD83D\uDCBE Vis gemte film og serier" + "\n" + "4)\uD83D\uDEAA Log ud" + "\n" + "5)❌ Afslut programmet" + "\n" + "6) saveSeries()");
+                    "3)\uD83D\uDCBE Vis gemte film og serier" + "\n" + "4)\uD83D\uDEAA Log ud" + "\n" + "5)❌ Afslut programmet");
 
             while (true) {
 
@@ -60,7 +60,7 @@ public class StreamingService {
                         return;
                     case 5:
                         endProgram();
-                        return; // not necessary - left in for aesthetics
+                        return;
                     default:
                         choice = ui.promptInteger("Ugyldigt valgt vælg et tal mellem 1-5");
 

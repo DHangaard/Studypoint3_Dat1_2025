@@ -54,14 +54,6 @@ public boolean makeThisAccountAdmin(String Password) {
         } );
     }
 
-
-    private void isAgeLessThan10(LocalDate date){
-       LocalDate convertYear = now().ofEpochDay(-3652);
-       if(date.isBefore(convertYear)){
-           this.isChild = false;
-       }
-    }
-
     private void calculateAge(LocalDate birthdate) {
         LocalDate currentDate = now();
         Period period = Period.between(birthdate, currentDate);
