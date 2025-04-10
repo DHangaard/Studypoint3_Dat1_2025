@@ -18,7 +18,7 @@ public class StreamingService {
     public StreamingService(Account user){
         this.ui = new TextUI();
         this.manager = new MediaManager("data/movies.csv", "data/series.csv");
-        this.login = new Login("metFlix");
+        this.login = new Login("Metflix");
         this.currentUser = user;
         this.choices = new ArrayList<>(List.of("1. Search","2. Show seen media","3. Show saved media","4. Logout", "5. Exit to main menu"));
         this.manager.loadSeriesData();
@@ -27,18 +27,20 @@ public class StreamingService {
     }
 
     public void welcomeScreen(){
-    ui.displayMessage("Velkommen tilbage " + currentUser.getName());
+        if(currentUser.isChild()){
+            ui.displayMessage("Metflix Kids");
+        }
+    ui.displayMessage("\uD83C\uDF89 Velkommen tilbage " + currentUser.getName() +" 🎉");
     showMenu();
 
     }
 
-    public void showMenu() {
+    public void showMenu(){
+        if(!(currentUser.getAdmin())) {
 
-        if (!currentUser.getAdmin()) {
-
-            ui.displayMessage("Hovedmenu:");
-            int choice = ui.promptInteger("1) Søg" + "\n" + "2) Vis tidligere sete film og serier" + "\n" +
-                    "3) Vis gemte film og serier" + "\n" + "4) Log ud" + "\n" + "5) Afslut programmet" + "\n");
+            ui.displayMessage("\uD83D\uDCCB Hovedmenu:");
+            int choice = ui.promptInteger("1)\uD83D\uDD0D Søg" + "\n" + "2)\uD83C\uDFA5 Vis tidligere sete film og serier" + "\n" +
+                    "3)\uD83D\uDCBE Vis gemte film og serier" + "\n" + "4)\uD83D\uDEAA Log ud" + "\n" + "5)❌ Afslut programmet" + "\n" + "6) saveSeries()");
 
             while (true) {
 
@@ -109,41 +111,29 @@ public class StreamingService {
 
     public void showSeenMedia(){
         ArrayList<Media> seenMedia = currentUser.getSeenMedia();
-        if(!(seenMedia.isEmpty())) {
-            ui.displayMessage("Liste over sete film og serier");
-            for (int i = 0; i < seenMedia.size(); i++) {
-                System.out.println(i + 1 + ") " + seenMedia.get(i));
-            }
-            boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
-            if(play) {
-                chooseMedia(seenMedia);
-            }
-            else {
-                showMenu();
-            }
-        } else {
-            ui.displayMessage("Ingen film eller serier, er tilføjet til sete film" + "\n" + "du vil blive sendt tilbage til hovedmenu");
-            showMenu();
-        }
+        showMediaList(seenMedia, "sete film og serier");
     }
 
     public void showSavedMedia(){
         ArrayList<Media> savedMedia = currentUser.getSavedMedia();
-        if(!(savedMedia.isEmpty())) {
-            ui.displayMessage("Liste over gemte film og serier:" + "\n");
-            for (int i = 0; i < savedMedia.size(); i++) {
-                System.out.println(i + 1 + ") " + savedMedia.get(i));
-            }
-            boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
+        showMediaList(savedMedia, "gemte film og serie");
+    }
 
-            if(play) {
-                chooseMedia(savedMedia);
+    public void showMediaList(ArrayList<Media> mediaList, String mediaType) {
+        if (!(mediaList.isEmpty())) {
+            ui.displayMessage("Liste over " + mediaType + ":");
+            for (int i = 0; i < mediaList.size(); i++) {
+                ui.displayMessage(i + 1 + ") " + mediaList.get(i));
             }
-            else {
+
+            boolean play = ui.promptBinary("Vil du afspille et af medierne, eller gå tilbage til hovedmenu? Y/N");
+            if (play) {
+                chooseMedia(mediaList);
+            } else {
                 showMenu();
             }
         } else {
-            ui.displayMessage("Ingen film eller serier, er tilføjet til gemte film." + "\n" + "Du vil blive sendt tilbage til hovedmenu.");
+            ui.displayMessage("Ingen " + mediaType + " er tilføjet. Du vil blive sendt tilbage til hovedmenu.");
             showMenu();
         }
     }
@@ -152,7 +142,7 @@ public class StreamingService {
         while(true) {
             int choice = ui.promptInteger("Vælg en film/serie vha. nummer");
 
-            //Get the chosen movie/serie
+            //Brugeren vælger et medie, afspiller og ligger i listen over sete medier
             if (choice > 0 && choice <= media.size()) {
                 Media chosenMedia = media.get(choice - 1);
                 playMediaAndSaveToList(chosenMedia);
@@ -164,6 +154,7 @@ public class StreamingService {
     }
 
     public void saveMovie() {
+        //TODO : IF USER IS ADMIN!
         ArrayList<String> genre = new ArrayList<>();
         String title = ui.promptText("Skriv en titel");
         int year = ui.promptInteger("Skriv årstal filmen er fra");
@@ -185,6 +176,7 @@ public class StreamingService {
     }
 
     public void saveSeries() {
+        //TODO : IF USER IS ADMIN ONLY!
         ArrayList<String> genre = new ArrayList<>();
         ArrayList<String> episodeAndSeasons = new ArrayList<>();
 
@@ -220,25 +212,31 @@ public class StreamingService {
     public void searchMenu(){
         ui.displayMessage("Søg efter film eller serier:");
         int choice = 0;
+
         while(true) {
             choice = ui.promptInteger("1) Søg efter titel" + "\n" + "2) Søg efter årstal" + "\n" + "3) Søg efter genre" + "\n" + "4) Søg efter rating");
+
             if(choice == 1){
                 String title = ui.promptText("Hvilken titel vil du søge efter?");
               searchTitle(title);
               break;
-            } else if(choice == 2){
-                int year = ui.promptInteger("Hvilet årstal vil du søge efter?");
+            }
+            else if(choice == 2){
+                int year = ui.promptInteger("Hvilket årstal vil du søge efter?");
                 searchByYear(year);
                 break;
-            }else if (choice == 3){
-                String genre = ui.promptText("Hvilen genre vil du søge efter?");
+            }
+            else if (choice == 3){
+                String genre = ui.promptText("Hvilken genre vil du søge efter?");
                 searchCategory(genre);
                 break;
-            }else if (choice == 4){
+            }
+            else if (choice == 4){
                 double rating = ui.promptDouble("Hvilken minimum rating, vil du søge efter?");
                 searchByRating(rating);
                 break;
-            } else{
+            }
+            else{
                 ui.displayMessage("Vælg venligst et tal mellem 1-5");
             }
         }
@@ -248,8 +246,6 @@ public class StreamingService {
         ArrayList<Media> searchTitles = manager.searchMediaByTitle(title);
         searchEngine(searchTitles,"titler");
         }
-
-
 
     private void searchCategory(String genre) {
         ArrayList<Media> genreList = manager.searchMediaByGenre(genre);
@@ -269,12 +265,11 @@ public class StreamingService {
         }
         private void searchNotFound() {
             ui.displayMessage("Ingen film / serie fundet med det søgekriterie");
-            continueSearch = ui.promptBinary("Vil du søge igen?");
+            continueSearch = ui.promptBinary("Vil du søge igen? Y/N");
             if (continueSearch) {
                 searchMenu();
             }
             showMenu();
-
         }
 
     // Play media
@@ -286,13 +281,12 @@ public class StreamingService {
 
 
     public void handleMediaAction(int action, Media chosenMedia) {
+
         while (true) {
+
             switch (action) {
                 case 1:
                     playMediaAndSaveToList(chosenMedia);
-                    //chosenMedia.playMedia();
-                    //currentUser.addSeenMedia(chosenMedia);
-                    //handlePostSearchAction(true);  // Mediet er afspillet
                     return;
                 case 2:
                     currentUser.addSavedMedia(chosenMedia);
@@ -311,14 +305,27 @@ public class StreamingService {
     }
 
     public void searchEngine(ArrayList<Media> media, String querry) {
+
+        // Hvis brugeren er et barn, skal vi filtrere listen til kun at inkludere "Family"-genren
+        if (currentUser.isChild()) {
+            ArrayList<Media> filtered = new ArrayList<>();
+            for (Media m : media) {
+                if (m.getGenre().contains("Family")) { // Kun medier med "Family" genre
+                    filtered.add(m);
+                }
+            }
+            media = filtered; // Opdater listen med de filtrerede medier
+        }
+
+        //Hvis listen ikke er tom, vil fundne film/serier blive vist
         if (!(media.isEmpty())) {
-            ui.displayMessage("Film og serier som matcher søgte" + querry + ":");
+            ui.displayMessage("Film og serier som matcher den søgte " + querry + ":");
             for (int i = 0; i < media.size(); i++) {
-                System.out.println(i + 1 + ") " + media.get(i));
+                ui.displayMessage(i + 1 + ") " + media.get(i));
             }
             ui.displayMessage("");
 
-            boolean confirmSelection = ui.promptBinary("Vil du udforske en af titlerne? Y/N ");
+            boolean confirmSelection = ui.promptBinary("Vil du vælge en af titlerne? Y/N ");
 
             if (confirmSelection) {
                 int mediaChoice = ui.promptInteger("Vælg venligst en af medierne ");
@@ -347,7 +354,7 @@ public class StreamingService {
             ui.displayMessage("Mediet er gemt til Se senere.");
         }
 
-        boolean continueSearch = ui.promptBinary("Vil du søge efter en anden film/serie? Y/N");
+        boolean continueSearch = ui.promptBinary("Vil du søge efter en anden film/ serie? Y/N");
         if (continueSearch) {
             searchMenu();  // Sender brugeren tilbage til søgning
         } else {
@@ -356,13 +363,16 @@ public class StreamingService {
     }
 
     public void logOut(){
-        ui.displayMessage("Du vil blive logget af, tak for denne gange");
+        ui.displayMessage("Du vil bliver nu logget af!");
+        ui.displayMessage("Tak for denne gang, " + currentUser.getName() + "! Vi håber, du havde det sjovt! 🎉"+ "\n" + "Farvel og på gensyn! 👋");
+        ui.displayMessage("");
         login.start();
     }
 
     public void endProgram(){
         // Save user state to CSV
         // manager.saveUserState(path)
+        ui.displayMessage("Tak for denne gang, " + currentUser.getName() + "! Vi håber, du havde det sjovt! 🎉"+ "\n" + "Farvel og på gensyn! 👋");
         System.exit(0);
     }
 

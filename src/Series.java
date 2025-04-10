@@ -35,8 +35,9 @@ public class Series extends Media {
 
     @Override
     public String toString() {
-        return "Title: " + this.title + ", " + "Årstal: " + this.releaseYear + "-" + this.endYear + ", " + "Genre: " +  this.genre + ", " + "Rating: " + this.rating + ", Sæsoner: " + this.seasons.size();
+        return "📺 Serie – 🎬 Titel: \"" + this.title + "\", 📅 År: " + this.releaseYear + "-" + this.endYear + ", 📚 Sæsoner: " + this.seasons.size() + ", 🎭 Genre: " + this.genre + ", ⭐ Rating: " + this.rating;
     }
+
 
     public int getReleaseYear(){
         return this.releaseYear;

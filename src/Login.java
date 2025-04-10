@@ -54,7 +54,7 @@ public class Login {
             if (manager.isUserNameAndPasswordCorrect(userName, password)) {
                 Account user = manager.getAccount(userName);
                 streamingService = new StreamingService(user);
-                streamingService.showMenu();
+                streamingService.welcomeScreen();
                 isPasswordCorrect = true;
             } else {
                 ui.displayMessage("Brugernavn eller password forkert" + "\n" + "Prøv igen");
@@ -62,7 +62,6 @@ public class Login {
             }
         }
     }
-
 
     public void createAccount() {
         String username = "";

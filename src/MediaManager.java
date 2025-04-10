@@ -234,14 +234,12 @@ public class MediaManager {
     public ArrayList<Media> getMediaList(){
         return mediaList;
     }
-
     public ArrayList<Series> getSeries(){
         return this.series;
     }
     public ArrayList<Movie> getMovie(){
         return this.movies;
     }
-
     public void addMedia(Media media){
         this.mediaList.add(media);
     }
