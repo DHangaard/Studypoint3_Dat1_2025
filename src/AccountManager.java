@@ -3,6 +3,8 @@ import util.TextUI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class AccountManager {
     static FileIO io;
@@ -17,7 +19,6 @@ public class AccountManager {
         loadUserData();
     }
 
-
     public void createAccount(String username, String password, String name, LocalDate birthdate) {
         if(!isUserInSystem(username)) {
             Account acc = new Account(username, password, name, birthdate);
@@ -26,7 +27,7 @@ public class AccountManager {
             appendUserData(acc);
             ui.displayMessage(createAccountMessage(acc));
         } else {
-            ui.displayMessage("Error: Username already taken"); // Translate String to danish
+            ui.displayMessage("Brugernavn allerede taget. Prøv venligst et nyt");
         }
     }
 
@@ -38,7 +39,6 @@ public class AccountManager {
         } else {
             message = "Brugeren er oprettet";
         }
-
         return message;
     }
 
@@ -53,14 +53,12 @@ public class AccountManager {
             LocalDate birthdate = LocalDate.parse(values[3].trim());
             boolean isAdmin = Boolean.parseBoolean(values[4].trim());
 
-
             // Create HashMap with Account
             Account acc = new Account(username, password, name, birthdate);
             if (isAdmin) {
              acc.setAdmin(true);
             }
             this.accounts.put(username, acc);
-
         }
     }
 
@@ -80,13 +78,27 @@ public class AccountManager {
         return false;
     }
 
-
     public boolean isUserNameAndPasswordCorrect(String userName, String password){
         if (this.accounts.containsKey(userName)) {
             Account acc = this.accounts.get(userName);
             return acc.getPassword().equals(password);
         }
         return false;
+    }
+
+    //
+    public void writeSeenByUser(Media media, Account user) {
+        try {
+            FileWriter writer = new FileWriter("data/userData/seenBy" + user.getUsername() + ".csv", true);
+
+
+            writer.write(String.join(";", media.toStringcsv() + System.lineSeparator()));
+
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("problem: " + e.getMessage());
+        }
     }
 
     boolean isUserInSystem(String username) {
@@ -97,8 +109,6 @@ public class AccountManager {
     return false;
     }
 
-
-
     public void appendUserData(Account account) {
         io.appendData(account.toString(), path);
     }
@@ -106,14 +116,5 @@ public class AccountManager {
     public Account getAccount(String userName) {
         return this.accounts.get(userName);
     }
+
 }
-
-    /*
-    // Save for single user only!
-    public void saveUserData() {
-        ArrayList<String> userData = new ArrayList<>();
-        accounts.forEach( (k,v) -> userData.add(v.toString()));
-
-        io.saveData(userData, path, "username, password, name, birthday");
-    }
-    */

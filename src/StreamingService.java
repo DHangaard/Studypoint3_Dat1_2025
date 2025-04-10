@@ -1,5 +1,5 @@
 import util.TextUI;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,10 +154,24 @@ public class StreamingService {
     }
 
     public void saveMovie() {
-        //TODO : IF USER IS ADMIN!
         ArrayList<String> genre = new ArrayList<>();
-        String title = ui.promptText("Skriv en titel");
-        int year = ui.promptInteger("Skriv årstal filmen er fra");
+
+        String title;
+        while (true) {
+             title = ui.promptText("Skriv en titel");;
+            if (!manager.getMovie().contains(title)) {
+                break;
+            }
+        }
+
+        int year;
+
+        while (true) {
+            year = ui.promptInteger("Skriv årstal filmen er fra");
+            if (year >= 1930 && year <= LocalDate.now().getYear()) {
+                break;
+            }
+        }
 
         boolean addingGenres = true;
         while (addingGenres) {
@@ -170,20 +184,48 @@ public class StreamingService {
             }
             addingGenres = ui.promptBinary("Vil du tilføje en genre mere? (Y/N)");
         }
-
-        double rating = ui.promptDouble("Giv et bedømmelsestal af filmen");
+        double rating;
+        while (true) {
+            rating = ui.promptDouble("Giv et bedømmelsestal af filmen");
+            if (rating >= 0.0 && rating <= 10.0) {
+                break;
+            }
+        }
         manager.saveMediaData(title, year, genre, rating);
     }
 
     public void saveSeries() {
-        //TODO : IF USER IS ADMIN ONLY!
         ArrayList<String> genre = new ArrayList<>();
         ArrayList<String> episodeAndSeasons = new ArrayList<>();
 
+        String title;
+        while (true) {
+            title = ui.promptText("Skriv en titel");;
+            if (!manager.getSeries().contains(title)) {
+                break;
+            }
+        }
 
-        String title = ui.promptText("Skriv en titel");
-        int releaseYear = ui.promptInteger("Skriv årstal (YYYY) serien er fra");
-        int endYear = ui.promptInteger("Skriv årstal (YYYY) serien kører til eller skriv 0 hvis den ikke har slutår");
+        int releaseYear;
+
+        while (true) {
+            releaseYear = ui.promptInteger("Skriv årstal (YYYY) serien er fra");
+            if (releaseYear >= 1930 && releaseYear <= LocalDate.now().getYear()) {
+                break;
+            }
+        }
+
+        String endYear;
+        while (true) {
+            endYear = ui.promptText("Skriv årstal (YYYY) serien kører til eller skriv -1 hvis den ikke har slutår");
+            if (endYear.equalsIgnoreCase("-1")){
+                endYear = "";
+                break;
+            }
+            if (Integer.parseInt(endYear) >= releaseYear && Integer.parseInt(endYear) <= LocalDate.now().getYear()) {
+                break;
+            }
+        }
 
         //while for at få liste af genrer og sæsoner/episoder
         boolean addingGenres = true;
@@ -198,7 +240,13 @@ public class StreamingService {
             addingGenres = ui.promptBinary("Vil du tilføje en genre mere? (Y/N)");
         }
 
-        double rating = ui.promptDouble("Giv et bedømmelsestal af serien");
+        double rating;
+        while (true) {
+            rating = ui.promptDouble("Giv et bedømmelsestal af filmen");
+            if (rating >= 0.0 && rating <= 10.0) {
+                break;
+            }
+        }
 
         boolean addingSeasons = true;
         while (addingSeasons) {

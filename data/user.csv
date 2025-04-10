@@ -1,4 +1,4 @@
-username, password, name, birthday, admin
+e-mail, password, username, birthday, admin
 Admin, 123, Adminton, 1990-01-01, true
 DHangaard, Kodeord1, Daniel, 1991-07-05, false
 TineM, Tine1234, Tine, 1961-12-27, false

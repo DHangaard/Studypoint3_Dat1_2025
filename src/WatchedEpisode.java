@@ -41,6 +41,10 @@ public class WatchedEpisode extends Media {
     public String toString() {
         return "Serie: " + series.getTitle() + ", Sæson: " + seasonNumber + ", Episode: " + episodeNumber;
     }
+    @Override
+    public String toStringcsv(){
+        return null;
+    }
 
     public Series getSeries() {
         return series;

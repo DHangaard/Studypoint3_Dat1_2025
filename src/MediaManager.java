@@ -25,7 +25,7 @@ public class MediaManager {
     }
 
     public void loadMovieData(){
-        //Get file data from file
+        // Hent movie filens data
         ArrayList<String> movieData = io.readData(this.moviePath);
 
         //Make movie objects and put in movies list
@@ -41,14 +41,14 @@ public class MediaManager {
             }
 
             double rating = Double.parseDouble(values[3].trim().replace(",", "."));
-
+            //Laver en instans af Movie og tilføjer den til medialist
             Movie movie = new Movie(title,year,genre,rating);
             this.mediaList.add(movie);
         }
     }
 
     public void loadSeriesData(){
-        // Hent filens data
+        // Hent serie filens data
         ArrayList<String> seriesData = io.readData(this.seriesPath);
 
         for (String s : seriesData) {
@@ -60,9 +60,9 @@ public class MediaManager {
             String years = values[1].trim();
             String[] yearArray = years.split("-");
             int releaseYear = Integer.parseInt(yearArray[0].trim());
-            int endYear = (yearArray.length > 1 && !yearArray[1].trim().isEmpty())
-                    ? Integer.parseInt(yearArray[1].trim())
-                    : 2025; // Default hvis ingen slutdato
+            String endYear = (yearArray.length > 1 && !yearArray[1].trim().isEmpty())
+                    ? yearArray[1].trim()
+                    : "2025"; // Default hvis ingen slutdato
 
             //Fjerner mellemrum i genre
             ArrayList<String> genre = new ArrayList<>();
@@ -91,27 +91,12 @@ public class MediaManager {
             for (Season season : seasons) {
                 serie.addSeason(season);
             }
+            // Tilføj instansen af serien i vores medialiste
             this.mediaList.add(serie);
         }
     }
 
-    /*
-    // Add all the seasons and spisodes
-    for (int i = 0; i < epsiodesAndSeason.size(); i++){
-        seasonCSV += s;
-
-        // Add comma except after last
-        for (int j = ; j < (epsiodesAndSeason.size()-1); j++){
-            seasonCSV += ", "
-        }
-    }
-
-    // Add semicolon after last
-    seasonCSV += ";";
-     */
-
-
-    public void saveMediaData(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeason){
+    public void saveMediaData(String title, int releaseYear, String endYear, ArrayList<String> genre, double rating, ArrayList<String> episodeAndSeason){
 
         StringBuilder genreCSVBuilder = new StringBuilder();
         for (int g = 0; g < genre.size(); g++) {
@@ -120,6 +105,7 @@ public class MediaManager {
                 genreCSVBuilder.append(", ");
             }
         }
+
         String genreCSV = genreCSVBuilder.toString();
 
         StringBuilder seasonCSVBuilder = new StringBuilder();

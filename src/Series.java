@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Series extends Media {
     private int releaseYear;
-    private int endYear;
+    private String endYear;
     TextUI ui;
     private ArrayList<String> episodesAndSeasons;
     private ArrayList<Season> seasons;
 
 
-    public Series(String title, int releaseYear, int endYear, ArrayList<String> genre, double rating){
+    public Series(String title, int releaseYear, String endYear, ArrayList<String> genre, double rating){
         super(title, genre, rating);
         this.releaseYear = releaseYear;
         this.endYear = endYear;
@@ -54,7 +54,7 @@ public class Series extends Media {
             }
         }
 
-        // Gem episoden som set
+        // Gem episoden som er set
         WatchedEpisode watchedEpisode = new WatchedEpisode(this.title,this.genre,this.rating,this, selectedSeason.getSeasonNumber(), episodeChoice);
         //Afspil serien
         this.playMedia(user, selectedSeason.getSeasonNumber(), episodeChoice);

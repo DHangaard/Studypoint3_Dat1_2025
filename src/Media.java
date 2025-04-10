@@ -11,6 +11,8 @@ public abstract class Media {
         this. rating = rating;
     }
 
+    public abstract String toStringcsv();
+
     public abstract String getTitle();
 
     public abstract ArrayList<String> getGenre();
@@ -18,5 +20,7 @@ public abstract class Media {
     public abstract double getRating();
 
     public abstract void playMedia();
+
     public abstract void playMedia(Account user, int seasonNumber, int episodeNumber);
+
 }

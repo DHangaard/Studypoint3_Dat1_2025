@@ -14,43 +14,42 @@ public class Login {
         this.ui = new TextUI();
         this.manager = new AccountManager();
         this.appName = appName;
-
     }
 
     // Methods
     public void start() {
 
-        ui.displayMessage("Welcome to " + this.appName + "\n" + "Du har følgende valgmuligheder:");
+        ui.displayMessage("Velkommen til " + this.appName + "\n" + "Du har følgende valgmuligheder:");
 
-        boolean isChoosing = true;
+        boolean isChoosen = true;
 
-        while (isChoosing) {
-            int choice = ui.promptInteger("1) Oprette en bruger" + "\n" + "2) Log ind med eksisterende bruger");
+        while (isChoosen) {
+            int choice = ui.promptInteger("1) Oprette en bruger" + "\n" + "2) Log ind med eksisterende bruger" + "\n" + "3) Afslut programmet");
 
             if (choice == 1) {
                 createAccount();
                 start();
-                isChoosing = false;
+                isChoosen = false;
 
             } else if (choice == 2) {
                 login();
-                isChoosing = false;
+                isChoosen = false;
 
-                // else if (choice == 3) { closeApp(); }
+            } else if (choice == 3) {
+                streamingService.endProgram();
 
             } else {
                 ui.displayMessage("Vælg venligst en gyldig mulighed");
             }
         }
-
     }
 
     public void login() {
         boolean isPasswordCorrect = false;
 
         while(!isPasswordCorrect) {
-            String userName = ui.promptText("Indtast dit brugernavn");
-            String password = ui.promptText("Indtast password");
+            String userName = ui.promptText("Indtast dit brugernavn: ");
+            String password = ui.promptText("Indtast password: ");
             if (manager.isUserNameAndPasswordCorrect(userName, password)) {
                 Account user = manager.getAccount(userName);
                 streamingService = new StreamingService(user);
@@ -61,6 +60,24 @@ public class Login {
                 System.out.println("");
             }
         }
+    }
+
+    public String createPassword(){
+        String password = "";
+        String confirmPassword;
+        boolean isPasswordNotIdentical = true;
+
+        while (isPasswordNotIdentical) {
+            password = ui.promptText("Indtast password: ");
+            confirmPassword = ui.promptText("Indtast password igen: ");
+
+            if (confirmPassword.equals(password)) {
+                isPasswordNotIdentical = false;
+            } else {
+                ui.displayMessage("De to passwords er ikke identiske. Prøv igen: ");
+            }
+        }
+        return password;
     }
 
     public void createAccount() {
@@ -76,7 +93,7 @@ public class Login {
                         isUserNameTaken = false;
                     }
                 }
-                String password = ui.promptText("Lav et password");
+                String password = createPassword();
                 String name = ui.promptText("Indtast dit fornavn");
                 LocalDate birthdate = ui.promptBirthday("Indtast fødselsoplysninger");
                 manager.createAccount(username,password,name,birthdate);

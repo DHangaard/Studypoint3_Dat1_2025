@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import static java.time.LocalDate.now;
 
-
 public class Account {
 
     // Attributes
@@ -32,11 +31,8 @@ public class Account {
         calculateAge(birthdate);
         isChildBasedOnAge();
 
-        //isAgeLessThan10(birthdate);
-
     }
 
-    // Methods
 public boolean makeThisAccountAdmin(String Password) {
         String adminPassword = "iAmAdmin-1234";
         if (password.equals(adminPassword)) {
@@ -77,15 +73,6 @@ public boolean makeThisAccountAdmin(String Password) {
 
     }
 
-    // Review this method!
-    public void setPassword(String oldPassword, String newPassword){
-        if(oldPassword.equals(password)){
-            password = newPassword;
-        }else{
-            System.out.println("wrong password !"); // TODO : skal vi have reccursion?
-        }
-
-    }
     public String getName(){return this.name;}
 
     public int getAge(){

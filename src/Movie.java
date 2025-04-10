@@ -16,6 +16,10 @@ public class Movie extends Media {
     public String toString() {
         return "🎞️ Film – 🎬 Titel: \"" + this.title + "\", 📅 År: " + this.year + ", 🎭 Genre: " + this.genre + ", ⭐ Rating: " + rating;
     }
+    @Override
+    public String toStringcsv() {
+        return this.title + "; "+ this.year + "; " + "; "+ this.genre + ";" + this.rating;
+    }
 
     public String getTitle(){
         return this.title;
@@ -27,13 +31,10 @@ public class Movie extends Media {
 
     public ArrayList<String> getGenre(){return this.genre;}
 
-    public double getRating(){
-        return this.rating;
-    }
+    public double getRating(){return this.rating;}
 
     public void playMedia(){
         System.out.println("Afspiller nu: \"" + this.title + "\" \uD83C\uDFAC");
-
     }
 
     @Override
