@@ -78,7 +78,7 @@ public boolean makeThisAccountAdmin(String Password) {
     }
 
     public void addSeenMedia(Media media){
-        this.seenMedia.add(media);
+
     }
 
     public void addSavedMedia(Media media){

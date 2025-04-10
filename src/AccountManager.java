@@ -9,10 +9,10 @@ import java.io.IOException;
 public class AccountManager {
     static FileIO io;
     static TextUI ui;
-    private HashMap<String,Account> accounts;
+    private HashMap<String, Account> accounts;
     private final String path = "data/user.csv";
 
-    public AccountManager(){
+    public AccountManager() {
         this.accounts = new HashMap<>();
         this.io = new FileIO();
         this.ui = new TextUI();
@@ -20,7 +20,7 @@ public class AccountManager {
     }
 
     public void createAccount(String username, String password, String name, LocalDate birthdate) {
-        if(!isUserInSystem(username)) {
+        if (!isUserInSystem(username)) {
             Account acc = new Account(username, password, name, birthdate);
             acc.setAdmin(promptAdmin());
             this.accounts.put(username, acc);
@@ -31,10 +31,10 @@ public class AccountManager {
         }
     }
 
-    public String createAccountMessage(Account account){
+    public String createAccountMessage(Account account) {
         String message = "";
 
-        if (account.getIsAdmin()){
+        if (account.getIsAdmin()) {
             message = "Brugeren er oprettet som administrator";
         } else {
             message = "Brugeren er oprettet";
@@ -42,7 +42,7 @@ public class AccountManager {
         return message;
     }
 
-    public void loadUserData(){
+    public void loadUserData() {
         ArrayList<String> userdata = io.readData(this.path);
 
         for (String s : userdata) {
@@ -56,13 +56,13 @@ public class AccountManager {
             // Create HashMap with Account
             Account acc = new Account(username, password, name, birthdate);
             if (isAdmin) {
-             acc.setAdmin(true);
+                acc.setAdmin(true);
             }
             this.accounts.put(username, acc);
         }
     }
 
-    private boolean promptAdmin(){
+    private boolean promptAdmin() {
         if (ui.promptBinary("Skal denne bruger være administrator? (Y/N)")) {
             String password = ui.promptText("Indtast administrator kodeordet");
             return (makeThisAccountAdmin(password));
@@ -78,7 +78,7 @@ public class AccountManager {
         return false;
     }
 
-    public boolean isUserNameAndPasswordCorrect(String userName, String password){
+    public boolean isUserNameAndPasswordCorrect(String userName, String password) {
         if (this.accounts.containsKey(userName)) {
             Account acc = this.accounts.get(userName);
             return acc.getPassword().equals(password);
@@ -87,7 +87,7 @@ public class AccountManager {
     }
 
     //
-    public  void writeSeenByUser(Media media, Account user) {
+    public void writeSeenByUser(Media media, Account user) {
         try {
             FileWriter writer = new FileWriter("data/userData/seenBy" + user.getUsername() + ".csv", true);
 
@@ -109,8 +109,9 @@ public class AccountManager {
 
         for (String s : mediaData) {
             String[] parts = s.split(";");
-            for (String part : parts) {
-                if (parts.length < 4) {
+            if (parts.length <=4) {
+
+
                     String title = parts[0].trim();
                     int year = Integer.parseInt(parts[1].trim());
 
@@ -126,7 +127,9 @@ public class AccountManager {
                     Movie movie = new Movie(title, year, genre, rating);
                     mediaList.add(movie);
 
-                } else {
+
+            } else {
+
 
                     String title = parts[0].trim();
                     int startYear = Integer.parseInt(parts[1].trim());
@@ -144,12 +147,10 @@ public class AccountManager {
 
                     Series series = new Series(title, startYear, endYear, genre, rating);
                     mediaList.add(series);
-
                 }
-
             }
 
-        }
+
 
         return mediaList;
     }
@@ -185,8 +186,82 @@ public class AccountManager {
         io.appendData(account.toString(), path);
     }
 
+    public void saveUserData() {
+        ArrayList<String> userData = new ArrayList<>();
+        accounts.forEach( (k,v) -> userData.add(v.toString()));
+
+        io.saveData(userData, path, "username, password, name, birthday");
+    }
+
     public Account getAccount(String userName) {
         return this.accounts.get(userName);
+    }
+    public void writeSavedByUser(Media media, Account user) {
+        try {
+            FileWriter writer = new FileWriter("data/userData/savedBy" + user.getUsername() + ".csv", true);
+
+
+            writer.write(String.join(",", media.toStringcsv() + System.lineSeparator()));
+
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("problem: " + e.getMessage());
+        }
+    }
+
+
+    public ArrayList<Media> loadSavedMediacsv(Account user) {
+        ArrayList<String> mediaData = io.readusercsvData("data/userData/savedBy" + user.getUsername() + ".csv");
+        ArrayList<Media> mediaList = new ArrayList<>();
+
+
+        for (String s : mediaData) {
+            String[] parts = s.split(";");
+            if (parts.length <=4) {
+
+
+                String title = parts[0].trim();
+                int year = Integer.parseInt(parts[1].trim());
+
+                //Fjerner mellemrum i genre
+                ArrayList<String> genre = new ArrayList<>();
+                for (String g : parts[2].split(",")) {
+                    genre.add(g.trim());
+                }
+
+                double rating = Double.parseDouble(parts[3].trim());
+
+
+                Movie movie = new Movie(title, year, genre, rating);
+                mediaList.add(movie);
+
+
+            } else {
+
+
+                String title = parts[0].trim();
+                int startYear = Integer.parseInt(parts[1].trim());
+                String endYear = parts[2].trim();
+
+                //Fjerner mellemrum i genre
+                ArrayList<String> genre = new ArrayList<>();
+                for (String g : parts[3].split(",")) {
+                    genre.add(g.trim());
+                }
+
+
+                double rating = Double.parseDouble(parts[4].trim());
+
+
+                Series series = new Series(title, startYear, endYear, genre, rating);
+                mediaList.add(series);
+            }
+        }
+
+
+
+        return mediaList;
     }
 
 }

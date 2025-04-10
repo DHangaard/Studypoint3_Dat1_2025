@@ -128,36 +128,97 @@ class Movie{
 + String toStringcsv()
 + String getTitle()
 + int getYear()
-+ ArrayList<String> genre getGenre()
++ ArrayList<String> getGenre()
 + double getRating()
++ void playMedia()
++ void playMedia(Account user, int seasonNumber, int episodeNumber)
+}
+
+
+
+class Season{
+- int episodes
+- int season
+
++ Season(int season, int episode)
++ int getSeasonNumber()
++ int getNumberOfEpisodes()
++ int getEpisodeCount()
 }
 
 
 
 class Series{
-- List <String> yearSpan
-- List <int> episodes
-- List <List> seasons
-+ Series(String title, List<String> releaseYear,List<String> genre, double rating, List<String> seasons)
++ TextUI ui
+- int releaseYear
+- String endYear
+- ArrayList <String> episodesAndSeasons
+- ArrayList <Season> seasons
+
++ Series(String title, int releaseYear, String endYear, ArrayList<String> genre, double rating)
++ void chooseMediaAdEpisodes(Account user)
++ void addSeason(Season season)
++ String toString()
++ String toStringcsv()
++ int getReleaseYear
++ String getEndYear()
++ String getTitle()
++ ArrayList<String> getGenre()
++ double getRating()
++ void playMedia()
++ void playMedia(Account user, int seasonNumber, int episodeNumber)
 }
 
 
 
 class StreamingService{
 - TextUI ui
-- MediaManager manager
-+ StreamingService(Account account)
+- MediaManager accountManager
+- Account currentUser
+- Login login
+- ArrayList<String> choices
+- boolean continueSearch
+
++ StreamingService(Account user)
 + void showMenu()
-+ void search()
++ void showSeenMedia()
++ void showSavedMedia()
++ void showMediaList(ArrayList<Media> mediaList, String mediaType)
++ void chooseMedia(ArrayList<Media> media)
++ void saveMovie()
++ void saveSeries()
++ void searchMenu()
 - void searchTitle(String title)
-- void searchCategory(String categoryName)
-- void searchByYear(int startYear, int endYear)
-- void searchByRating(double rating)
-- void displayMedia()
-+ void showSeenMedia(Account a)
-+ void showSavedMedia(Account a)
+- void searchCategory(String genre)
+- void searchByYear(int searchedYear)
+- void searchByRating(double searchedRating)
+- void searchNotFound()
++ void playMediaAndSaveToList(Media chosenMedia)
++ void handleMediaAction(int action, Media chosenMedia)
++ void searchEngine(ArrayList<Media> media, String querry)
++ void handlePostSearchAction(boolean mediaPlayed)
++ void makeAnotherAdmin()
 + void logOut()
-+ void endStreamingService()
+}
+
+
+
+class WatchedEpisode{
+- Series series
+- int seasonNumber
+- int episodeNumber
+
++ WatchedEpisode(String title, ArrayList<String> genre, double rating, Series series, int seasonNumber, int episodeNumber)
++ String getTitle()
++ ArrayList<String> getGenre()
++ double getRating()
++ void playMedia()
++ void playMedia(Account user, int seasonNumber, int episodeNumber)
++ String toString()
++ String toStringcsv()
++ Series getSeries()
++ int getSeasonNumber()
++ int getEpisodeNumber()
 }
 
 
@@ -203,9 +264,13 @@ StreamingService *-- TextUI
 StreamingService *-- MediaManager
 MediaManager *-- FileIO
 MediaManager *-- Media
+MediaManager o-- Season
 
+Series --* WatchedEpisode
+Series *-- Season
 
 Media <|-- Movie
 Media <|-- Series
+Media <|-- WatchedEpisode
 
 @enduml

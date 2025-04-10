@@ -3,9 +3,9 @@ import util.TextUI;
 import java.util.ArrayList;
 
 public class Series extends Media {
+    TextUI ui;
     private int releaseYear;
     private String endYear;
-    TextUI ui;
     private ArrayList<String> episodesAndSeasons;
     private ArrayList<Season> seasons;
 

@@ -15,7 +15,6 @@ public class StreamingService {
     private boolean continueSearch;
 
     // Constructor
-
     public StreamingService(Account user){
         this.ui = new TextUI();
         this.accountManager = new AccountManager();
@@ -120,7 +119,7 @@ public class StreamingService {
     }
 
     public void showSavedMedia(){
-        ArrayList<Media> savedMedia = currentUser.getSavedMedia();
+        ArrayList<Media> savedMedia = accountManager.loadSavedMediacsv(currentUser);
         showMediaList(savedMedia, "gemte film og serie");
     }
 
@@ -348,7 +347,7 @@ public class StreamingService {
                     playMediaAndSaveToList(chosenMedia);
                     return;
                 case 2:
-                    currentUser.addSavedMedia(chosenMedia);
+                    accountManager.writeSavedByUser(chosenMedia, currentUser);
                     handlePostSearchAction(false);  // Mediet er gemt til Se senere
                     return;
                 case 3:
@@ -429,6 +428,7 @@ public class StreamingService {
             username = ui.promptText("Skriv en andens brugernavn som du vil ændre til admin");
             if (accountManager.getNonAdmins().contains(username)){
                 accountManager.makeAnotherAccountAdmin(username);
+                accountManager.saveUserData();
                 break;
             }
         }
