@@ -1,5 +1,2 @@
-username, password, name, birthday
-morten@home.dk, Morten123, Morten, 1989-05-17, false
-hej, HejHej1, -1, 2024-12-01, false
-java@kaffe.java, JavaErSjovt1, Morten, 2015-04-10, false
-viggo@hotmail.com, JegJeg1, viggo, 2015-12-12, true
+username, password, name, birthday, isAdmin
+daniel@cphbusiness.dk, ABcd1234, Bo, 1991-12-24, false
