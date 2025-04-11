@@ -225,7 +225,8 @@ class WatchedEpisode{
 
 package "util" {
     class TextUI {
-    - Scanner scan
+    + Scanner scanner
+    + TextUI()
     + void displayMessage(String message)
     + void displayMessage(Object object)
     + void displayList(ArrayList<String> list, String message)
@@ -242,10 +243,11 @@ package "util" {
 
 package "util" {
     class FileIO{
-    + void saveData(ArrayList<String> list, String path, String header)
+    + void saveData(ArrayList<String> data, String path, String header)
     + void appendData(String object, String path)
     + ArrayList<String> readData(String path)
     + String[] readData(String path, int length)
+    + ArrayList<String> readusercsvData(String path)
     }
  }
 

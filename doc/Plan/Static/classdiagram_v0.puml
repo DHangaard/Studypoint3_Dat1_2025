@@ -118,8 +118,10 @@ package "util" {
 package "util" {
     class FileIO{
     + void saveData(ArrayList<String> data, String path, String header)
+    + void appendData(String object, String path)
     + ArrayList<String> readData(String path)
     + String[] readData(String path, int length)
+    + ArrayList<String> readusercsvData(String path)
     }
  }
 
